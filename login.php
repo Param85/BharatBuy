@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['user_name'] = $user['full_name'];
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['profile_image'] = $user['profile_image'];
+            $_SESSION['is_admin'] = ((int)($user['is_admin'] ?? 0) === 1);
             header("Location: dashboard.php");
             exit();
         } else {

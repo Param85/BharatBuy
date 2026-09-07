@@ -7,14 +7,15 @@ $pendingAlerts = [];
 $userNotifications = [];
 if (isLoggedIn()) {
     try {
-        if (!isset($_SESSION['user_email']) || !isset($_SESSION['profile_image'])) {
-            $stmtUser = $pdo->prepare("SELECT email, full_name, profile_image FROM users WHERE id = ?");
+        if (!isset($_SESSION['user_email']) || !isset($_SESSION['profile_image']) || !isset($_SESSION['is_admin'])) {
+            $stmtUser = $pdo->prepare("SELECT email, full_name, profile_image, is_admin FROM users WHERE id = ?");
             $stmtUser->execute([$_SESSION['user_id']]);
             $userData = $stmtUser->fetch();
             if ($userData) {
                 $_SESSION['user_email'] = $userData['email'];
                 $_SESSION['user_name'] = $userData['full_name'];
                 $_SESSION['profile_image'] = $userData['profile_image'];
+                $_SESSION['is_admin'] = ((int)($userData['is_admin'] ?? 0) === 1);
             }
         }
         
@@ -288,6 +289,9 @@ if (isLoggedIn()) {
                         </div>
                     </li>
                     <?php if(isLoggedIn()): ?>
+                        <?php if(!empty($_SESSION['is_admin'])): ?>
+                            <li><a href="admin/" class="btn" style="background: rgba(99, 102, 241, 0.15); color: #6366f1; border: 1px solid rgba(99, 102, 241, 0.35); font-weight: 600; display: inline-flex; align-items: center; gap: 6px; padding: 0.45rem 0.9rem; border-radius: 8px; text-decoration: none;"><i class="fa-solid fa-shield-halved"></i> Admin Panel</a></li>
+                        <?php endif; ?>
                         <li><a href="logout.php" class="btn btn-primary">Logout</a></li>
                     <?php else: ?>
                         <li><a href="login.php">Login</a></li>
