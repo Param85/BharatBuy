@@ -26,29 +26,29 @@ const initBackgroundAnimation = () => {
             will-change: transform;
             animation: floatBlob 25s infinite alternate ease-in-out;
         }
-        .glow-orange {
+        .glow-emerald {
             width: 700px;
             height: 700px;
             top: -150px;
             left: -150px;
-            background: radial-gradient(circle, rgba(255, 107, 0, 0.18) 0%, rgba(255, 107, 0, 0) 70%);
+            background: radial-gradient(circle, rgba(6, 67, 59, 0.22) 0%, rgba(6, 67, 59, 0) 70%);
             animation-duration: 22s;
         }
-        .glow-green {
+        .glow-champagne {
             width: 800px;
             height: 800px;
             bottom: -200px;
             right: -150px;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0) 70%);
+            background: radial-gradient(circle, rgba(248, 231, 201, 0.25) 0%, rgba(248, 231, 201, 0) 70%);
             animation-duration: 30s;
             animation-delay: -7s;
         }
-        .glow-blue {
+        .glow-gold {
             width: 600px;
             height: 600px;
             top: 35%;
             left: 45%;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, rgba(37, 99, 235, 0) 70%);
+            background: radial-gradient(circle, rgba(184, 142, 76, 0.16) 0%, rgba(184, 142, 76, 0) 70%);
             animation-duration: 38s;
             animation-delay: -12s;
         }
@@ -71,13 +71,13 @@ const initBackgroundAnimation = () => {
     document.head.appendChild(style);
     
     const blob1 = document.createElement('div');
-    blob1.className = 'ambient-glow glow-orange';
+    blob1.className = 'ambient-glow glow-emerald';
     
     const blob2 = document.createElement('div');
-    blob2.className = 'ambient-glow glow-green';
+    blob2.className = 'ambient-glow glow-champagne';
     
     const blob3 = document.createElement('div');
-    blob3.className = 'ambient-glow glow-blue';
+    blob3.className = 'ambient-glow glow-gold';
     
     container.appendChild(blob1);
     container.appendChild(blob2);

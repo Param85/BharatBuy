@@ -217,25 +217,22 @@ if (isLoggedIn()) {
                 <ul class="nav-links">
                     <li><a href="index.php">Home</a></li>
                     <?php if(isLoggedIn()): ?>
-                        <li><a href="dashboard.php">Dashboard</a></li>
                         <li><a href="wishlist.php">Wishlist</a></li>
-                    <?php endif; ?>
-                    <?php if(isLoggedIn()): ?>
-                    <li style="position: relative;">
-                        <button id="notif-bell-toggle" class="nav-icon-btn" title="Notifications" aria-label="Notifications">
-                            <i class="fa-solid fa-bell"></i>
-                            <span id="notif-badge" class="notif-badge" style="display: none;">0</span>
-                        </button>
-                        <div id="notif-dropdown" class="notif-dropdown" style="display: none;">
-                            <div class="notif-header">
-                                <h3>Notifications</h3>
-                                <button id="notif-clear-all" class="notif-clear-btn">Clear All</button>
+                        <li style="position: relative;">
+                            <button id="notif-bell-toggle" class="nav-icon-btn" title="Notifications" aria-label="Notifications">
+                                <i class="fa-solid fa-bell"></i>
+                                <span id="notif-badge" class="notif-badge" style="display: none;">0</span>
+                            </button>
+                            <div id="notif-dropdown" class="notif-dropdown" style="display: none;">
+                                <div class="notif-header">
+                                    <h3>Notifications</h3>
+                                    <button id="notif-clear-all" class="notif-clear-btn">Clear All</button>
+                                </div>
+                                <div id="notif-items-container" class="notif-body">
+                                    <div class="notif-empty">No new notifications</div>
+                                </div>
                             </div>
-                            <div id="notif-items-container" class="notif-body">
-                                <div class="notif-empty">No new notifications</div>
-                            </div>
-                        </div>
-                    </li>
+                        </li>
                     <?php endif; ?>
 
                     <li style="position: relative;">
@@ -288,6 +285,9 @@ if (isLoggedIn()) {
                             </div>
                         </div>
                     </li>
+
+                    <li><a href="dashboard.php">Dashboard</a></li>
+
                     <?php if(isLoggedIn()): ?>
                         <?php if(!empty($_SESSION['is_admin'])): ?>
                             <li><a href="admin/" class="btn" style="background: rgba(99, 102, 241, 0.15); color: #6366f1; border: 1px solid rgba(99, 102, 241, 0.35); font-weight: 600; display: inline-flex; align-items: center; gap: 6px; padding: 0.45rem 0.9rem; border-radius: 8px; text-decoration: none;"><i class="fa-solid fa-shield-halved"></i> Admin Panel</a></li>
@@ -323,7 +323,7 @@ if (isLoggedIn()) {
                 disabledText: "Disabled",
                 strictOption: "Strict Match",
                 broadOption: "Broad Search",
-                heroTitle: "Compare. Analyze.<br><span style='background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>Shop Smarter.</span>",
+                heroTitle: "Compare. Analyze.<br><span class='gradient-text'>Shop Smarter.</span>",
                 heroDesc: "The intelligent shopping assistant that searches multiple online platforms simultaneously and recommends the absolute best deal using a smart scoring algorithm.",
                 getStarted: "Get Started Now",
                 goToDashboard: "Go to Dashboard",
@@ -353,7 +353,7 @@ if (isLoggedIn()) {
                 disabledText: "अक्षम",
                 strictOption: "सख्त मिलान",
                 broadOption: "व्यापक खोज",
-                heroTitle: "तुलना करें। विश्लेषण करें।<br><span style='background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>होशियारी से खरीदें।</span>",
+                heroTitle: "तुलना करें। विश्लेषण करें।<br><span class='gradient-text'>होशियारी से खरीदें।</span>",
                 heroDesc: "बुद्धिमान शॉपिंग सहायक जो एक साथ कई ऑनलाइन प्लेटफ़ॉर्म पर खोज करता है और स्मार्ट स्कोरिंग एल्गोरिदम का उपयोग करके सर्वोत्तम सौदे की सिफारिश करता है।",
                 getStarted: "अभी शुरू करें",
                 goToDashboard: "डैशबोर्ड पर जाएं",
@@ -383,7 +383,7 @@ if (isLoggedIn()) {
                 disabledText: "Desactivado",
                 strictOption: "Coincidencia estricta",
                 broadOption: "Búsqueda amplia",
-                heroTitle: "Comparar. Analizar.<br><span style='background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>Compra inteligente.</span>",
+                heroTitle: "Comparar. Analizar.<br><span class='gradient-text'>Compra inteligente.</span>",
                 heroDesc: "El asistente de compras inteligente que busca en múltiples plataformas en línea simultáneamente y recomienda la mejor oferta absoluta mediante un algoritmo de puntuación inteligente.",
                 getStarted: "Empezar ahora",
                 goToDashboard: "Ir al panel",
@@ -413,7 +413,7 @@ if (isLoggedIn()) {
                 disabledText: "Désactivé",
                 strictOption: "Correspondance stricte",
                 broadOption: "Recherche large",
-                heroTitle: "Comparer. Analyser.<br><span style='background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>Acheter plus intelligemment.</span>",
+                heroTitle: "Comparer. Analyser.<br><span class='gradient-text'>Acheter plus intelligemment.</span>",
                 heroDesc: "L'assistant d'achat intelligent qui effectue des recherches sur plusieurs plateformes en ligne simultanément et recommande la meilleure offre absolue à l'aide d'un algorithme de notation intelligent.",
                 getStarted: "Commencer maintenant",
                 goToDashboard: "Aller au tableau de bord",
@@ -443,7 +443,7 @@ if (isLoggedIn()) {
                 disabledText: "Deaktiviert",
                 strictOption: "Strikte Übereinstimmung",
                 broadOption: "Breite Suche",
-                heroTitle: "Vergleichen. Analysieren.<br><span style='background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>Intelligenter einkaufen.</span>",
+                heroTitle: "Vergleichen. Analysieren.<br><span class='gradient-text'>Intelligenter einkaufen.</span>",
                 heroDesc: "Der intelligente Einkaufsassistent, der gleichzeitig mehrere Online-Plattformen durchsucht und mithilfe eines intelligenten Bewertungsalgorithmus das absolut beste Angebot empfiehlt.",
                 getStarted: "Jetzt starten",
                 goToDashboard: "Zum Dashboard gehen",

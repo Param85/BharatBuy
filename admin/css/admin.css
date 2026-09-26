@@ -24,12 +24,13 @@
     --admin-text-muted: #64748B;
     --admin-text-dim: #475569;
 
-    /* Primary — Electric Indigo */
-    --admin-primary: #6366F1;
-    --admin-primary-hover: #818CF8;
-    --admin-primary-light: rgba(99, 102, 241, 0.1);
-    --admin-primary-glow: rgba(99, 102, 241, 0.2);
-    --admin-primary-deep: #4F46E5;
+    /* Primary — Emerald Ink & Champagne */
+    --admin-primary: #10B981;
+    --admin-primary-hover: #34D399;
+    --admin-primary-light: rgba(16, 185, 129, 0.15);
+    --admin-primary-glow: rgba(248, 231, 201, 0.2);
+    --admin-primary-deep: #06433B;
+    --admin-champagne: #F8E7C9;
 
     /* Semantic Colors */
     --admin-success: #34D399;

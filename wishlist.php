@@ -49,12 +49,14 @@ $items = $stmt->fetchAll();
                         $imgUrl = $item['latest_image_url'];
                     } else {
                         $q = strtolower($item['product_name']);
-                        if (strpos($q, 'shirt') !== false || strpos($q, 'clothing') !== false || strpos($q, 'apparel') !== false) {
-                            $imgUrl = 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=500&q=80';
+                        if (strpos($q, 'glass') !== false || strpos($q, 'rayban') !== false || strpos($q, 'ray-ban') !== false || strpos($q, 'sunglass') !== false) {
+                            $imgUrl = 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&q=80';
+                        } elseif (strpos($q, 'shirt') !== false || strpos($q, 'clothing') !== false || strpos($q, 'apparel') !== false) {
+                            $imgUrl = 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&q=80';
                         } elseif (strpos($q, 'shoe') !== false || strpos($q, 'sneaker') !== false || strpos($q, 'cleat') !== false || strpos($q, 'nike') !== false) {
-                            $imgUrl = 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80';
+                            $imgUrl = 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80';
                         } elseif (strpos($q, 'watch') !== false) {
-                            $imgUrl = 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80';
+                            $imgUrl = 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600&q=80';
                         } else {
                             $imgUrl = 'https://placehold.co/500x500/f5f5f7/1d1d1f?text=' . urlencode($item['product_name']);
                         }

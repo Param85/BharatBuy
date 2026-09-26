@@ -1,7 +1,12 @@
+/* ==========================================================================
+   BharatBuy - Dashboard Stylesheet
+   Theme: Emerald Ink (#06433B) & Champagne (#F8E7C9)
+   ========================================================================== */
+
 .dashboard-hero { 
     padding: 5rem 5%; 
-    background: radial-gradient(circle at 80% 20%, var(--primary-light) 0%, var(--bg) 100%); 
-    border-bottom: 1px solid var(--border); 
+    background: radial-gradient(circle at 80% 20%, rgba(248, 231, 201, 0.35) 0%, rgba(6, 67, 59, 0.05) 60%, var(--bg) 100%); 
+    border-bottom: 1px solid var(--champagne-border); 
 }
 
 .dashboard-hero h1 {
@@ -34,12 +39,19 @@
     font-family: inherit;
     outline: none; 
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.01);
+    box-shadow: 0 4px 12px rgba(6, 67, 59, 0.02);
+    background: var(--card-bg);
+    color: var(--text);
 }
 
 .search-container input:focus { 
-    border-color: var(--primary); 
-    box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.12);
+    border-color: #06433B; 
+    box-shadow: 0 0 0 4px rgba(248, 231, 201, 0.55);
+}
+
+[data-theme="dark"] .search-container input:focus {
+    border-color: #F8E7C9;
+    box-shadow: 0 0 0 4px rgba(248, 231, 201, 0.25);
 }
 
 .search-container button {
@@ -74,8 +86,13 @@
 
 .product-card:hover { 
     transform: translateY(-8px); 
-    box-shadow: var(--shadow-lg); 
-    border-color: rgba(255, 107, 0, 0.2);
+    box-shadow: 0 14px 30px rgba(6, 67, 59, 0.12), 0 0 0 2px var(--champagne-glow); 
+    border-color: #06433B;
+}
+
+[data-theme="dark"] .product-card:hover {
+    border-color: #F8E7C9;
+    box-shadow: 0 14px 30px rgba(248, 231, 201, 0.1);
 }
 
 .product-card small {
@@ -105,16 +122,23 @@
     position: absolute; 
     top: -14px; 
     left: 20px; 
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%); 
-    color: white; 
+    background: linear-gradient(135deg, #06433B 0%, #0A5A50 100%); 
+    color: #F8E7C9; 
+    border: 1px solid #E8CD9E;
     padding: 0.45rem 1.25rem; 
     border-radius: 20px; 
     font-size: 0.75rem; 
     font-weight: 700;
-    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
+    box-shadow: 0 4px 12px rgba(6, 67, 59, 0.25);
     display: flex;
     align-items: center;
     gap: 0.3rem;
+}
+
+[data-theme="dark"] .recommendation-badge {
+    background: linear-gradient(135deg, #F8E7C9 0%, #E8CD9E 100%);
+    color: #06433B;
+    border-color: #F8E7C9;
 }
 
 /* Site Badges style */
@@ -141,8 +165,12 @@
 .price-tag { 
     font-size: 1.85rem; 
     font-weight: 800; 
-    color: var(--text); 
+    color: #06433B; 
     margin: 0.5rem 0 0.75rem 0; 
+}
+
+[data-theme="dark"] .price-tag {
+    color: #F8E7C9;
 }
 
 .rating-stars { 
@@ -174,7 +202,7 @@
     font-weight: 700; 
     font-size: 0.85rem;
     align-self: flex-start;
-    border: 1px solid rgba(255, 107, 0, 0.1);
+    border: 1px solid var(--champagne-border);
 }
 
 #loader { 
@@ -185,9 +213,13 @@
 }
 
 #loader i {
-    color: var(--primary);
+    color: #06433B;
     margin-bottom: 1.25rem;
     animation: fa-spin 1.5s infinite linear;
+}
+
+[data-theme="dark"] #loader i {
+    color: #F8E7C9;
 }
 
 #loader p {

@@ -156,9 +156,9 @@ $similar_products = getSimilarProducts($product_id, $product['category']);
             </div>
 
             <!-- Price Alert Tracker Box -->
-            <div style="background: linear-gradient(135deg, var(--primary-light) 0%, var(--card-bg) 100%); border: 1px solid var(--border); padding: 2rem; border-radius: 20px; display: flex; flex-direction: column; gap: 1rem;">
-                <h3 style="font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.15rem; color: #7c2d12;"><i class="fa-solid fa-bell" style="margin-right: 0.5rem;"></i> Track Price Alerts</h3>
-                <p style="font-size: 0.9rem; color: #9a3412; line-height: 1.5; margin: 0;">We'll monitor this product and send you an instant email alert when the price drops below your target price.</p>
+            <div style="background: linear-gradient(135deg, var(--primary-light) 0%, var(--card-bg) 100%); border: 1px solid var(--champagne-border, #E8CD9E); padding: 2rem; border-radius: 20px; display: flex; flex-direction: column; gap: 1rem;">
+                <h3 style="font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--primary);"><i class="fa-solid fa-bell" style="margin-right: 0.5rem;"></i> Track Price Alerts</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin: 0;">We'll monitor this product and send you an instant email alert when the price drops below your target price.</p>
                 
                 <?php if ($tracking_price): ?>
                     <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
@@ -320,10 +320,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const curRate = (savedCurrency === 'USD') ? 0.0105 : (savedCurrency === 'EUR' ? 0.0097 : (savedCurrency === 'GBP' ? 0.0082 : 1));
     const convertedData = data.map(val => val * curRate);
 
-    // Gradient fill
+    // Gradient fill with Emerald Ink & Champagne
     const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-    gradient.addColorStop(0, 'rgba(255, 107, 0, 0.25)');
-    gradient.addColorStop(1, 'rgba(255, 107, 0, 0.00)');
+    gradient.addColorStop(0, 'rgba(6, 67, 59, 0.32)');
+    gradient.addColorStop(1, 'rgba(248, 231, 201, 0.02)');
 
     new Chart(ctx, {
         type: 'line',
@@ -332,16 +332,16 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [{
                 label: `Price (${curSymbol})`,
                 data: convertedData,
-                borderColor: '#FF6B00',
+                borderColor: '#06433B',
                 backgroundColor: gradient,
                 borderWidth: 3,
                 fill: true,
                 tension: 0.35,
-                pointBackgroundColor: '#FF6B00',
-                pointBorderColor: '#FFFFFF',
-                pointBorderWidth: 2,
-                pointRadius: 4,
-                pointHoverRadius: 7
+                pointBackgroundColor: '#06433B',
+                pointBorderColor: '#F8E7C9',
+                pointBorderWidth: 2.5,
+                pointRadius: 5,
+                pointHoverRadius: 8
             }]
         },
         options: {

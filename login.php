@@ -53,13 +53,13 @@ require_once __DIR__ . '/includes/header.php';
     <div id="account-chooser-view" style="display: none;">
         <!-- Header decoration with BharatBuy logo -->
         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1.5rem; position: relative;">
-            <div style="background: radial-gradient(circle, #f8fafc 60%, #e2e8f0 100%); padding: 1.25rem; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; width: 90px; height: 90px; border: 1px solid #e2e8f0;">
+            <div style="background: radial-gradient(circle, #FAF2E3 50%, #F4EAD4 100%); padding: 1.25rem; border-radius: 50%; box-shadow: 0 4px 12px rgba(6, 67, 59, 0.08); display: flex; align-items: center; justify-content: center; width: 90px; height: 90px; border: 1.5px solid var(--champagne-border, #E8CD9E);">
                 <img src="assets/images/logo.png?v=3" alt="BharatBuy" style="max-width: 65px; max-height: 65px; object-fit: contain;">
             </div>
         </div>
 
         <h2 style="font-family: 'Poppins', sans-serif; font-size: 1.35rem; font-weight: 600; color: var(--text); margin: 0 0 6px; text-align: center;">Sign in to BharatBuy</h2>
-        <p style="text-align: center; color: #5f6368; font-size: 0.9rem; margin-bottom: 1.5rem;">Which accounts will you prefer to login</p>
+        <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Which accounts will you prefer to login</p>
         
         <div id="accounts-list-container" class="accounts-chooser-list">
             <!-- Injected by JavaScript -->
@@ -83,7 +83,7 @@ require_once __DIR__ . '/includes/header.php';
             <input type="hidden" name="email" id="password-view-email-input">
             <div class="form-group">
                 <label for="password-view-pass">Password</label>
-                <input type="password" name="pass" id="password-view-pass" required style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; background: var(--card-bg); color: var(--text);">
+                <input type="password" name="pass" id="password-view-pass" required style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; background: var(--card-bg); color: var(--text);">
             </div>
             <button type="submit" class="btn btn-primary" style="width:100%; padding: 0.75rem; border-radius: 10px;">Login</button>
         </form>
@@ -98,11 +98,11 @@ require_once __DIR__ . '/includes/header.php';
         <form method="POST" action="login.php" id="standard-login-form">
             <div class="form-group">
                 <label for="standard-email-input">Email</label>
-                <input type="email" name="email" id="standard-email-input" required style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; background: var(--card-bg); color: var(--text);">
+                <input type="email" name="email" id="standard-email-input" required style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; background: var(--card-bg); color: var(--text);">
             </div>
             <div class="form-group">
                 <label for="standard-pass-input">Password</label>
-                <input type="password" name="pass" id="standard-pass-input" required style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; background: var(--card-bg); color: var(--text);">
+                <input type="password" name="pass" id="standard-pass-input" required style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; background: var(--card-bg); color: var(--text);">
             </div>
             <button type="submit" class="btn btn-primary" style="width:100%; padding: 0.75rem; border-radius: 10px;">Login</button>
         </form>
@@ -134,7 +134,7 @@ require_once __DIR__ . '/includes/header.php';
     border-bottom: none;
 }
 .account-item-card:hover {
-    background: var(--primary-light);
+    background: rgba(248, 231, 201, 0.28);
 }
 .account-info-container {
     display: flex;
@@ -146,8 +146,9 @@ require_once __DIR__ . '/includes/header.php';
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
-    color: white;
+    background: linear-gradient(135deg, #06433B 0%, #0A5A50 100%);
+    color: #F8E7C9;
+    border: 1px solid var(--champagne-border, #E8CD9E);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -190,34 +191,42 @@ require_once __DIR__ . '/includes/header.php';
     background: var(--error-light);
 }
 .google-pill-btn {
-    border: 1px solid var(--border);
+    border: 1.5px solid var(--champagne-border, #E8CD9E);
     background: var(--card-bg);
-    color: var(--primary);
+    color: #06433B;
     border-radius: 20px;
     padding: 8px 16px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
+    transition: all 0.2s ease;
 }
 .google-pill-btn:hover {
-    background: var(--primary-light);
-    border-color: var(--primary);
+    background: #06433B;
+    color: #F8E7C9;
+    border-color: #06433B;
+}
+[data-theme="dark"] .google-pill-btn {
+    color: #F8E7C9;
+}
+[data-theme="dark"] .google-pill-btn:hover {
+    background: #F8E7C9;
+    color: #06433B;
 }
 
 .big-avatar {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
-    color: white;
+    background: linear-gradient(135deg, #06433B 0%, #0A5A50 100%);
+    color: #F8E7C9;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 800;
     font-size: 2.25rem;
     text-transform: uppercase;
-    border: 3px solid white;
+    border: 3px solid var(--champagne-border, #E8CD9E);
     box-shadow: var(--shadow);
     object-fit: cover;
 }

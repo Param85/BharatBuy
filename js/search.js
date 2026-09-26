@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const searchBtn = document.getElementById('searchBtn');
     const productSearch = document.getElementById('productSearch');
     const resultsDiv = document.getElementById('results');
@@ -10,11 +10,19 @@ document.addEventListener('DOMContentLoaded', function() {
     searchBtn.addEventListener('click', performSearch);
 
     // Trigger search on Enter key
-    productSearch.addEventListener('keypress', function(e) {
+    productSearch.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             performSearch();
         }
     });
+
+    // Auto-search if ?q= URL parameter exists
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialQuery = urlParams.get('q');
+    if (initialQuery) {
+        productSearch.value = initialQuery;
+        performSearch();
+    }
 
     function performSearch() {
         const query = productSearch.value.trim();
@@ -44,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 data.forEach((item, index) => {
                     const isBest = index === 0; // First item is highest score
-                    
+
                     // Create FontAwesome star rating html
                     const fullStars = Math.floor(item.rating);
                     const halfStar = item.rating % 1 >= 0.5 ? 1 : 0;
@@ -106,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function saveToWishlist(name, site, price, img, url) {
     const btn = event.currentTarget;
     const icon = btn.querySelector('i');
-    
+
     // Animate icon immediately
     icon.classList.remove('fa-regular', 'fa-heart');
     icon.classList.add('fa-solid', 'fa-heart', 'fa-beat');
@@ -118,34 +126,34 @@ function saveToWishlist(name, site, price, img, url) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, site, price, img, url })
     })
-    .then(res => {
-        if (!res.ok) {
-            throw new Error('Wishlist API error');
-        }
-        return res.json();
-    })
-    .then(data => {
-        icon.classList.remove('fa-beat');
-        if (data.success) {
-            // Success alert (non-blocking notification styling is cleaner but standard alert is fine)
-            // Show alert or clean notification
-            alert('Product added to your wishlist!');
-        } else {
-            // Revert animation if failed
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('Wishlist API error');
+            }
+            return res.json();
+        })
+        .then(data => {
+            icon.classList.remove('fa-beat');
+            if (data.success) {
+                // Success alert (non-blocking notification styling is cleaner but standard alert is fine)
+                // Show alert or clean notification
+                alert('Product added to your wishlist!');
+            } else {
+                // Revert animation if failed
+                icon.classList.remove('fa-solid', 'fa-heart');
+                icon.classList.add('fa-regular', 'fa-heart');
+                btn.style.color = '';
+                btn.style.borderColor = '';
+                alert(data.error || 'Failed to save to wishlist.');
+            }
+        })
+        .catch(err => {
+            icon.classList.remove('fa-beat');
             icon.classList.remove('fa-solid', 'fa-heart');
             icon.classList.add('fa-regular', 'fa-heart');
             btn.style.color = '';
             btn.style.borderColor = '';
-            alert(data.error || 'Failed to save to wishlist.');
-        }
-    })
-    .catch(err => {
-        icon.classList.remove('fa-beat');
-        icon.classList.remove('fa-solid', 'fa-heart');
-        icon.classList.add('fa-regular', 'fa-heart');
-        btn.style.color = '';
-        btn.style.borderColor = '';
-        console.error(err);
-        alert('Failed to save product to wishlist.');
-    });
+            console.error(err);
+            alert('Failed to save product to wishlist.');
+        });
 }
