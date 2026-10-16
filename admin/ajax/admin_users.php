@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin AJAX — User Management Actions
+ * Admin AJAX - User Management Actions
  * Handles: delete_user, toggle_admin
  */
 require_once __DIR__ . '/../includes/admin_auth.php';
@@ -8,7 +8,16 @@ requireAdmin();
 
 header('Content-Type: application/json');
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Method not allowed.']);
+    exit;
+}
+
+validate_csrf_or_exit();
+
 $action = $_POST['action'] ?? '';
+
 
 switch ($action) {
 
@@ -35,7 +44,8 @@ switch ($action) {
             logAdminAction($pdo, 'Deleted user', 'user', $userId, $target ? $target['email'] : 'Unknown');
             echo json_encode(['success' => true, 'message' => 'User deleted successfully.']);
         } catch (PDOException $e) {
-            echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+            error_log("admin_users error (delete): " . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'An internal database error occurred while deleting user.']);
         }
         break;
 
@@ -59,7 +69,8 @@ switch ($action) {
             logAdminAction($pdo, $actionText, 'user', $userId);
             echo json_encode(['success' => true, 'message' => $actionText . ' successfully.']);
         } catch (PDOException $e) {
-            echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+            error_log("admin_users error (toggle_admin): " . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'An internal database error occurred while updating role.']);
         }
         break;
 

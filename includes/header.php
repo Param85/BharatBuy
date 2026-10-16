@@ -51,12 +51,28 @@ if (isLoggedIn()) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo APP_NAME; ?></title>
+    <title><?php echo !empty($pageTitle) ? htmlspecialchars($pageTitle) : APP_NAME; ?></title>
+    <meta name="description" content="BharatBuy is a smart multi-store shopping platform. Compare product prices, review price history, and set automated price drop alerts across major retailers.">
+    <meta name="keywords" content="price comparison, online shopping, price tracker, deals, BharatBuy, India shopping, discount finder">
+    <meta name="theme-color" content="#06433B">
+
+    <!-- Favicon Configuration -->
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg?v=3">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png?v=3">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png?v=3">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png?v=3">
+
+    <!-- Open Graph Metadata -->
+    <meta property="og:title" content="<?php echo !empty($pageTitle) ? htmlspecialchars($pageTitle) : APP_NAME; ?>">
+    <meta property="og:description" content="Compare live product prices across top retailers and set alerts for price drops.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/images/logo.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=<?= time(); ?>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>
         (function () {
             const savedTheme = localStorage.getItem('theme') || 'light';
@@ -210,97 +226,159 @@ if (isLoggedIn()) {
     </style>
 </head>
 <body>
-    <header>
+    <!-- 12. Skip to Content (Accessibility) -->
+    <a href="#main-content" class="skip-to-content">Skip to content</a>
+
+    <!-- 8. Scroll Progress Bar & 6. Top Loading Bar -->
+    <div id="bb-scroll-progress" aria-hidden="true"></div>
+    <div id="bb-top-loader" aria-hidden="true"></div>
+
+    <header class="site-header">
         <div class="header-container">
             <a href="index.php" class="nav-logo"><img src="assets/images/logo.png?v=3" alt="BharatBuy"></a>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="index.php">Home</a></li>
-                    <?php if(isLoggedIn()): ?>
-                        <li><a href="wishlist.php">Wishlist</a></li>
-                        <li style="position: relative;">
-                            <button id="notif-bell-toggle" class="nav-icon-btn" title="Notifications" aria-label="Notifications">
-                                <i class="fa-solid fa-bell"></i>
-                                <span id="notif-badge" class="notif-badge" style="display: none;">0</span>
-                            </button>
-                            <div id="notif-dropdown" class="notif-dropdown" style="display: none;">
-                                <div class="notif-header">
-                                    <h3>Notifications</h3>
-                                    <button id="notif-clear-all" class="notif-clear-btn">Clear All</button>
+
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="index.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active' : ''; ?>">Home</a></li>
+                        
+                        <!-- 3. Site Search Quick Nav -->
+                        <li><a href="dashboard.php" class="nav-icon-btn" title="Site Search (Ctrl+K)" aria-label="Site Search"><i class="fa-solid fa-magnifying-glass"></i></a></li>
+
+
+                        <?php if(isLoggedIn()): ?>
+                            <li><a href="wishlist.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'wishlist.php' ? 'active' : ''; ?>">Wishlist</a></li>
+                            <li style="position: relative;">
+                                <button id="notif-bell-toggle" class="nav-icon-btn" title="Notifications" aria-label="Notifications">
+                                    <i class="fa-solid fa-bell"></i>
+                                    <span id="notif-badge" class="notif-badge" style="display: none;">0</span>
+                                </button>
+                                <div id="notif-dropdown" class="notif-dropdown" style="display: none;">
+                                    <div class="notif-header">
+                                        <h3>Notifications</h3>
+                                        <button id="notif-clear-all" class="notif-clear-btn">Clear All</button>
+                                    </div>
+                                    <div id="notif-items-container" class="notif-body">
+                                        <div class="notif-empty">No new notifications</div>
+                                    </div>
                                 </div>
-                                <div id="notif-items-container" class="notif-body">
-                                    <div class="notif-empty">No new notifications</div>
+                            </li>
+                        <?php endif; ?>
+
+                        <li style="position: relative;">
+                            <button id="settings-toggle" class="nav-link-btn" title="Settings" aria-label="Settings">
+                                <i class="fa-solid fa-gear"></i>
+                                <span data-translate="settingsTitle">Settings</span>
+                            </button>
+                            <div id="settings-dropdown" class="settings-dropdown">
+                                <div class="settings-header">
+                                    <h3>Settings</h3>
+                                </div>
+                                <div class="settings-body" style="display: flex; flex-direction: column; gap: 0.85rem;">
+                                    <div class="settings-item">
+                                        <span data-translate="themeLabel">Appearance</span>
+                                        <button id="theme-toggle" class="theme-toggle-dropdown-btn">
+                                            <i class="fa-solid fa-moon"></i> <span id="theme-btn-text">Dark Mode</span>
+                                        </button>
+                                    </div>
+                                    <div class="settings-item">
+                                        <span data-translate="langLabel">Language</span>
+                                        <select id="lang-select" class="settings-select">
+                                            <option value="en">English</option>
+                                            <option value="hi">हिंदी (Hindi)</option>
+                                            <option value="es">Español (Spanish)</option>
+                                            <option value="fr">Français (French)</option>
+                                            <option value="de">Deutsch (German)</option>
+                                        </select>
+                                    </div>
+                                    <div class="settings-item">
+                                        <span data-translate="currencyLabel">Currency</span>
+                                        <select id="currency-select" class="settings-select">
+                                            <option value="INR">INR (₹)</option>
+                                            <option value="USD">USD ($)</option>
+                                            <option value="EUR">EUR (€)</option>
+                                            <option value="GBP">GBP (£)</option>
+                                        </select>
+                                    </div>
+                                    <div class="settings-item">
+                                        <span data-translate="notifLabel">Price Alerts</span>
+                                        <button id="notif-toggle" class="theme-toggle-dropdown-btn">
+                                            <i class="fa-solid fa-bell"></i> <span id="notif-btn-text">Enabled</span>
+                                        </button>
+                                    </div>
+                                    <div class="settings-item">
+                                        <span data-translate="strictLabel">Search Mode</span>
+                                        <select id="strict-select" class="settings-select">
+                                            <option value="strict">Strict Match</option>
+                                            <option value="broad">Broad Search</option>
+                                        </select>
+                                    </div>
+                                    <div class="settings-item" style="border-top: 1px solid var(--border); padding-top: 0.75rem; margin-top: 0.25rem;">
+                                        <span>Legal &amp; Trust</span>
+                                        <div style="display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.25rem;">
+                                            <a href="privacy-policy.php" style="color: var(--text); font-size: 0.85rem; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; padding: 0.2rem 0; transition: color 0.2s;"><i class="fa-solid fa-shield-halved" style="font-size: 0.75rem; color: var(--primary);"></i> Privacy Policy</a>
+                                            <a href="terms-and-conditions.php" style="color: var(--text); font-size: 0.85rem; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; padding: 0.2rem 0; transition: color 0.2s;"><i class="fa-solid fa-scale-balanced" style="font-size: 0.75rem; color: var(--primary);"></i> Terms &amp; Conditions</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </li>
-                    <?php endif; ?>
 
-                    <li style="position: relative;">
-                        <button id="settings-toggle" class="nav-icon-btn" title="Settings" aria-label="Settings">
-                            <i class="fa-solid fa-gear"></i>
-                        </button>
-                        <div id="settings-dropdown" class="settings-dropdown">
-                            <div class="settings-header">
-                                <h3>Settings</h3>
-                            </div>
-                            <div class="settings-body" style="display: flex; flex-direction: column; gap: 0.85rem;">
-                                <div class="settings-item">
-                                    <span data-translate="themeLabel">Appearance</span>
-                                    <button id="theme-toggle" class="theme-toggle-dropdown-btn">
-                                        <i class="fa-solid fa-moon"></i> <span id="theme-btn-text">Dark Mode</span>
-                                    </button>
-                                </div>
-                                <div class="settings-item">
-                                    <span data-translate="langLabel">Language</span>
-                                    <select id="lang-select" class="settings-select">
-                                        <option value="en">English</option>
-                                        <option value="hi">हिंदी (Hindi)</option>
-                                        <option value="es">Español (Spanish)</option>
-                                        <option value="fr">Français (French)</option>
-                                        <option value="de">Deutsch (German)</option>
-                                    </select>
-                                </div>
-                                <div class="settings-item">
-                                    <span data-translate="currencyLabel">Currency</span>
-                                    <select id="currency-select" class="settings-select">
-                                        <option value="INR">INR (₹)</option>
-                                        <option value="USD">USD ($)</option>
-                                        <option value="EUR">EUR (€)</option>
-                                        <option value="GBP">GBP (£)</option>
-                                    </select>
-                                </div>
-                                <div class="settings-item">
-                                    <span data-translate="notifLabel">Price Alerts</span>
-                                    <button id="notif-toggle" class="theme-toggle-dropdown-btn">
-                                        <i class="fa-solid fa-bell"></i> <span id="notif-btn-text">Enabled</span>
-                                    </button>
-                                </div>
-                                <div class="settings-item">
-                                    <span data-translate="strictLabel">Search Mode</span>
-                                    <select id="strict-select" class="settings-select">
-                                        <option value="strict">Strict Match</option>
-                                        <option value="broad">Broad Search</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
+                        <li><a href="dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'dashboard.php' ? 'active' : ''; ?>"><i class="fa-solid fa-table-columns" style="font-size: 0.85rem;"></i> Dashboard</a></li>
 
-                    <li><a href="dashboard.php">Dashboard</a></li>
-
-                    <?php if(isLoggedIn()): ?>
-                        <?php if(!empty($_SESSION['is_admin'])): ?>
-                            <li><a href="admin/" class="btn" style="background: rgba(99, 102, 241, 0.15); color: #6366f1; border: 1px solid rgba(99, 102, 241, 0.35); font-weight: 600; display: inline-flex; align-items: center; gap: 6px; padding: 0.45rem 0.9rem; border-radius: 8px; text-decoration: none;"><i class="fa-solid fa-shield-halved"></i> Admin Panel</a></li>
+                        <?php if(isLoggedIn()): ?>
+                            <?php if(!empty($_SESSION['is_admin'])): ?>
+                                <li><a href="admin/" class="btn btn-sm btn-secondary"><i class="fa-solid fa-shield-halved"></i> Admin Panel</a></li>
+                            <?php endif; ?>
+                            <li><a href="logout.php" class="nav-logout-btn" title="Log out of your account"><i class="fa-solid fa-arrow-right-from-bracket" style="font-size: 0.82rem;"></i> Logout</a></li>
+                        <?php else: ?>
+                            <li><a href="login.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'login.php' ? 'active' : ''; ?>">Login</a></li>
+                            <li><a href="register.php" class="nav-btn-join">Join</a></li>
                         <?php endif; ?>
-                        <li><a href="logout.php" class="btn btn-primary">Logout</a></li>
-                    <?php else: ?>
-                        <li><a href="login.php">Login</a></li>
-                        <li><a href="register.php" class="btn btn-primary">Join</a></li>
-                    <?php endif; ?>
-                </ul>
-            </nav>
+                    </ul>
+                </nav>
+
+                <!-- 5. Mobile Navigation Hamburger Button -->
+                <button id="mobile-menu-toggle" class="mobile-menu-btn" aria-label="Toggle Navigation Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
         </div>
     </header>
+
+    <!-- 5. Mobile Navigation Drawer & Overlay -->
+    <div id="mobile-nav-overlay" class="mobile-nav-overlay" aria-hidden="true"></div>
+    <aside id="mobile-nav-drawer" class="mobile-nav-drawer" aria-label="Mobile Navigation">
+        <div class="mobile-drawer-header">
+            <a href="index.php" class="nav-logo"><img src="assets/images/logo.png?v=3" alt="BharatBuy" style="height: 32px;"></a>
+            <button id="mobile-drawer-close" class="mobile-menu-btn" style="display: inline-flex;" aria-label="Close Navigation Menu">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <ul class="mobile-drawer-links">
+            <li><a href="index.php"><i class="fa-solid fa-house"></i> Home</a></li>
+            <li><a href="dashboard.php"><i class="fa-solid fa-table-columns"></i> Search Dashboard</a></li>
+            <li><a href="category.php?cat=mobiles"><i class="fa-solid fa-mobile-screen"></i> Mobiles</a></li>
+            <li><a href="category.php?cat=electronics"><i class="fa-solid fa-laptop"></i> Electronics</a></li>
+            <li><a href="category.php?cat=fashion"><i class="fa-solid fa-shirt"></i> Fashion</a></li>
+            <?php if(isLoggedIn()): ?>
+                <li><a href="wishlist.php"><i class="fa-solid fa-heart"></i> Saved Wishlist</a></li>
+                <?php if(!empty($_SESSION['is_admin'])): ?>
+                    <li><a href="admin/"><i class="fa-solid fa-shield-halved"></i> Admin Panel</a></li>
+                <?php endif; ?>
+                <li><a href="logout.php"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a></li>
+            <?php else: ?>
+                <li><a href="login.php"><i class="fa-solid fa-right-to-bracket"></i> Login</a></li>
+                <li><a href="register.php"><i class="fa-solid fa-user-plus"></i> Join BharatBuy</a></li>
+            <?php endif; ?>
+        </ul>
+        <div style="margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 0.75rem;">
+            <button id="mobile-theme-toggle" class="theme-toggle-dropdown-btn">
+                <i class="fa-solid fa-moon"></i> <span id="mobile-theme-text">Toggle Dark Mode</span>
+            </button>
+            <div style="font-size: 0.78rem; color: var(--text-muted); text-align: center;">BharatBuy &copy; <?= date('Y'); ?></div>
+        </div>
+    </aside>
     <script>
         const PENDING_ALERTS = <?php echo json_encode($pendingAlerts); ?>;
         const TRANSLATIONS = {
@@ -323,8 +401,8 @@ if (isLoggedIn()) {
                 disabledText: "Disabled",
                 strictOption: "Strict Match",
                 broadOption: "Broad Search",
-                heroTitle: "Compare. Analyze.<br><span class='gradient-text'>Shop Smarter.</span>",
-                heroDesc: "The intelligent shopping assistant that searches multiple online platforms simultaneously and recommends the absolute best deal using a smart scoring algorithm.",
+                heroTitle: "Compare. Analyze.<br><span class='hero-highlight'>Shop Smarter.</span>",
+                heroDesc: "Compare real-time prices across Amazon, eBay, and Flipkart. Track price drops and discover authentic savings before you buy.",
                 getStarted: "Get Started Now",
                 goToDashboard: "Go to Dashboard",
                 smartScoringTitle: "Smart Value Scoring",
@@ -353,8 +431,8 @@ if (isLoggedIn()) {
                 disabledText: "अक्षम",
                 strictOption: "सख्त मिलान",
                 broadOption: "व्यापक खोज",
-                heroTitle: "तुलना करें। विश्लेषण करें।<br><span class='gradient-text'>होशियारी से खरीदें।</span>",
-                heroDesc: "बुद्धिमान शॉपिंग सहायक जो एक साथ कई ऑनलाइन प्लेटफ़ॉर्म पर खोज करता है और स्मार्ट स्कोरिंग एल्गोरिदम का उपयोग करके सर्वोत्तम सौदे की सिफारिश करता है।",
+                heroTitle: "तुलना करें। विश्लेषण करें।<br><span class='hero-highlight'>होशियारी से खरीदें।</span>",
+                heroDesc: "अमेज़न, ईबे और फ्लिपकार्ट पर रीयल-टाइम कीमतों की तुलना करें। वास्तविक बचत खोजें।",
                 getStarted: "अभी शुरू करें",
                 goToDashboard: "डैशबोर्ड पर जाएं",
                 smartScoringTitle: "स्मार्ट वैल्यू स्कोरिंग",
@@ -383,8 +461,8 @@ if (isLoggedIn()) {
                 disabledText: "Desactivado",
                 strictOption: "Coincidencia estricta",
                 broadOption: "Búsqueda amplia",
-                heroTitle: "Comparar. Analizar.<br><span class='gradient-text'>Compra inteligente.</span>",
-                heroDesc: "El asistente de compras inteligente que busca en múltiples plataformas en línea simultáneamente y recomienda la mejor oferta absoluta mediante un algoritmo de puntuación inteligente.",
+                heroTitle: "Comparar. Analizar.<br><span class='hero-highlight'>Compra inteligente.</span>",
+                heroDesc: "Compare precios en tiempo real entre Amazon, eBay y Flipkart. Encuentre ahorros auténticos.",
                 getStarted: "Empezar ahora",
                 goToDashboard: "Ir al panel",
                 smartScoringTitle: "Puntuación de valor inteligente",
@@ -413,8 +491,8 @@ if (isLoggedIn()) {
                 disabledText: "Désactivé",
                 strictOption: "Correspondance stricte",
                 broadOption: "Recherche large",
-                heroTitle: "Comparer. Analyser.<br><span class='gradient-text'>Acheter plus intelligemment.</span>",
-                heroDesc: "L'assistant d'achat intelligent qui effectue des recherches sur plusieurs plateformes en ligne simultanément et recommande la meilleure offre absolue à l'aide d'un algorithme de notation intelligent.",
+                heroTitle: "Comparer. Analyser.<br><span class='hero-highlight'>Acheter plus intelligemment.</span>",
+                heroDesc: "Comparez les prix en temps réel sur Amazon, eBay et Flipkart. Trouvez des offres authentiques.",
                 getStarted: "Commencer maintenant",
                 goToDashboard: "Aller au tableau de bord",
                 smartScoringTitle: "Évaluation intelligente de la valeur",
@@ -443,8 +521,8 @@ if (isLoggedIn()) {
                 disabledText: "Deaktiviert",
                 strictOption: "Strikte Übereinstimmung",
                 broadOption: "Breite Suche",
-                heroTitle: "Vergleichen. Analysieren.<br><span class='gradient-text'>Intelligenter einkaufen.</span>",
-                heroDesc: "Der intelligente Einkaufsassistent, der gleichzeitig mehrere Online-Plattformen durchsucht und mithilfe eines intelligenten Bewertungsalgorithmus das absolut beste Angebot empfiehlt.",
+                heroTitle: "Vergleichen. Analysieren.<br><span class='hero-highlight'>Intelligenter einkaufen.</span>",
+                heroDesc: "Vergleichen Sie Echtzeitpreise bei Amazon, eBay und Flipkart. Entdecken Sie echte Rabatte.",
                 getStarted: "Jetzt starten",
                 goToDashboard: "Zum Dashboard gehen",
                 smartScoringTitle: "Intelligente Wertbewertung",
@@ -756,11 +834,21 @@ if (isLoggedIn()) {
                     // Format time
                     const notifTime = new Date(notif.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-                    item.innerHTML = `
-                        <div class="notif-item-title">${notif.title}</div>
-                        <div class="notif-item-message">${notif.message}</div>
-                        <div class="notif-item-time">${notifTime}</div>
-                    `;
+                    const titleEl = document.createElement('div');
+                    titleEl.className = 'notif-item-title';
+                    titleEl.textContent = notif.title || '';
+
+                    const msgEl = document.createElement('div');
+                    msgEl.className = 'notif-item-message';
+                    msgEl.textContent = notif.message || '';
+
+                    const timeEl = document.createElement('div');
+                    timeEl.className = 'notif-item-time';
+                    timeEl.textContent = notifTime;
+
+                    item.appendChild(titleEl);
+                    item.appendChild(msgEl);
+                    item.appendChild(timeEl);
 
                     item.addEventListener('click', () => {
                         if (notif.product_id) {
@@ -776,7 +864,7 @@ if (isLoggedIn()) {
                 // 1. Add alert to dynamic list
                 notifications.unshift({
                     id: alert.tracker_id,
-                    title: '🔥 Price Drop Alert!',
+                    title: 'Price Drop Alert',
                     message: `${alert.product_name} is now down to ₹${parseFloat(alert.current_price).toLocaleString()}!`,
                     product_id: alert.product_id,
                     created_at: new Date().toISOString()
@@ -856,4 +944,4 @@ if (isLoggedIn()) {
             }
         });
     </script>
-    <main>
+    <main id="main-content">

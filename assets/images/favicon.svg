@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="100%" height="100%">
+  <!-- Top Handle -->
+  <path d="M 52 56 V 40 C 52 24.5, 64.5 12, 80 12 C 95.5 12, 108 24.5, 108 40 V 56" fill="none" stroke="#FF870F" stroke-width="13" stroke-linecap="round" />
+
+  <!-- Middle White Stripe -->
+  <rect x="20" y="74" width="120" height="40" fill="#FFFFFF" />
+
+  <!-- Top Saffron Bar with Notch Cutouts -->
+  <path d="M 20 58 A 8 8 0 0 1 28 50 H 132 A 8 8 0 0 1 140 58 V 82 H 112 V 74 H 104 V 82 H 56 V 74 H 48 V 82 H 20 Z" fill="#FF870F" />
+
+  <!-- Ashoka Chakra on White Stripe -->
+  <circle cx="80" cy="97" r="13.5" fill="none" stroke="#0C2364" stroke-width="1.8" />
+  <circle cx="80" cy="97" r="2.5" fill="#0C2364" />
+    <line x1='80' y1='97' x2='93.5' y2='97' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='93.04' y2='100.49' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='91.69' y2='103.75' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='89.55' y2='106.55' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='86.75' y2='108.69' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='83.49' y2='110.04' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='80' y2='110.5' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='76.51' y2='110.04' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='73.25' y2='108.69' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='70.45' y2='106.55' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='68.31' y2='103.75' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='66.96' y2='100.49' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='66.5' y2='97' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='66.96' y2='93.51' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='68.31' y2='90.25' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='70.45' y2='87.45' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='73.25' y2='85.31' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='76.51' y2='83.96' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='80' y2='83.5' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='83.49' y2='83.96' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='86.75' y2='85.31' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='89.55' y2='87.45' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='91.69' y2='90.25' stroke='#0C2364' stroke-width='1.0' />
+    <line x1='80' y1='97' x2='93.04' y2='93.51' stroke='#0C2364' stroke-width='1.0' />
+
+  <!-- Bottom Green Base -->
+  <path d="M 20 114 H 140 V 134 A 14 14 0 0 1 126 148 H 34 A 14 14 0 0 1 20 134 Z" fill="#098E4C" />
+</svg>

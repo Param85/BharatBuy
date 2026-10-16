@@ -11,10 +11,14 @@ $adminEmail = $_SESSION['user_email'] ?? '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel — <?php echo APP_NAME; ?></title>
+    <title>Admin Panel - <?php echo APP_NAME; ?></title>
+    <meta name="csrf-token" content="<?= htmlspecialchars(csrf_token()); ?>">
+    <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg?v=3">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon-32x32.png?v=3">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon-16x16.png?v=3">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon.png?v=3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="css/admin.css?v=<?= time(); ?>">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>

@@ -1,13 +1,23 @@
 <?php
 require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/session.php';
+
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'error' => 'Method not allowed']);
+    exit;
+}
+
+if (!isLoggedIn()) {
+    http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'Unauthorized']);
     exit;
 }
 
 $tracker_id = isset($_POST['tracker_id']) ? (int)$_POST['tracker_id'] : 0;
+
 
 try {
     $stmtDetail = $pdo->prepare("
@@ -36,7 +46,7 @@ try {
         $stmtNotif = $pdo->prepare("INSERT INTO user_notifications (user_id, title, message, product_id) VALUES (?, ?, ?, ?)");
         $stmtNotif->execute([
             $_SESSION['user_id'],
-            '🔥 Price Drop Alert!',
+            'Price Drop Alert',
             $alert['product_name'] . ' is now down to ₹' . number_format($alert['current_price'], 2),
             $alert['product_id']
         ]);
@@ -46,5 +56,7 @@ try {
     $stmt->execute([$tracker_id, $_SESSION['user_id']]);
     echo json_encode(['success' => true]);
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    error_log("deactivate_tracker error: " . $e->getMessage());
+    echo json_encode(['success' => false, 'error' => 'An error occurred while updating tracker.']);
 }
+

@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin — Product Catalog Browser
+ * Admin - Product Catalog Browser
  * Browse all product_prices with search, filter, and price history.
  */
 require_once __DIR__ . '/includes/admin_auth.php';
@@ -114,14 +114,14 @@ try {
                                 <?php if ((int)$p['discount_rate'] > 0): ?>
                                     <span class="admin-badge success"><?= $p['discount_rate']; ?>% off</span>
                                 <?php else: ?>
-                                    <span class="text-muted">—</span>
+                                    <span class="text-muted">-</span>
                                 <?php endif; ?>
                             </td>
                             <td>
                                 <?php if ((float)$p['rating'] > 0): ?>
                                     <i class="fa-solid fa-star" style="color: #F59E0B; font-size: 0.75rem;"></i> <?= $p['rating']; ?>
                                 <?php else: ?>
-                                    <span class="text-muted">—</span>
+                                    <span class="text-muted">-</span>
                                 <?php endif; ?>
                             </td>
                             <td><?= number_format($p['review_count']); ?></td>

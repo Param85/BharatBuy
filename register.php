@@ -3,25 +3,49 @@ require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/header.php';
 
 $msg = '';
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $name = trim($_POST['name']);
-    $email = trim($_POST['email']);
-    $pass = password_hash($_POST['pass'], PASSWORD_DEFAULT);
 
-    if (empty($name) || empty($email) || empty($_POST['pass'])) {
-        $msg = ['error', 'All fields are required!'];
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $msg = ['error', 'Please enter a valid email address.'];
+// Rate limiting on registration attempts
+if (!isset($_SESSION['reg_attempts'])) {
+    $_SESSION['reg_attempts'] = ['count' => 0, 'last_attempt' => time()];
+}
+if (time() - $_SESSION['reg_attempts']['last_attempt'] > 300) {
+    $_SESSION['reg_attempts'] = ['count' => 0, 'last_attempt' => time()];
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_SESSION['reg_attempts']['count'] >= 5) {
+        $remaining = max(1, ceil((300 - (time() - $_SESSION['reg_attempts']['last_attempt'])) / 60));
+        $msg = ['error', "Too many registration attempts. Please wait {$remaining} minute(s)."];
+    } elseif (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
+        $msg = ['error', 'Security verification failed. Please refresh the page and try again.'];
     } else {
-        $check = $pdo->prepare("SELECT id FROM users WHERE email = ?");
-        $check->execute([$email]);
-        
-        if ($check->fetch()) {
-            $msg = ['error', 'Email already exists!'];
+        $name = trim($_POST['name'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $rawPass = $_POST['pass'] ?? '';
+
+        if (empty($name) || empty($email) || empty($rawPass)) {
+            $msg = ['error', 'All fields are required!'];
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $msg = ['error', 'Please enter a valid email address.'];
+        } elseif (strlen($rawPass) < 8) {
+            $msg = ['error', 'Password must be at least 8 characters long.'];
+        } elseif (strlen($name) > 100 || strlen($email) > 150) {
+            $msg = ['error', 'Input length exceeds allowable limits.'];
         } else {
-            $stmt = $pdo->prepare("INSERT INTO users (full_name, email, password) VALUES (?, ?, ?)");
-            $stmt->execute([$name, $email, $pass]);
-            $msg = ['success', 'Account created! <a href="login.php">Login here</a>'];
+            $check = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+            $check->execute([$email]);
+            
+            if ($check->fetch()) {
+                $_SESSION['reg_attempts']['count']++;
+                $_SESSION['reg_attempts']['last_attempt'] = time();
+                $msg = ['error', 'An account with that email already exists!'];
+            } else {
+                $pass = password_hash($rawPass, PASSWORD_DEFAULT);
+                $stmt = $pdo->prepare("INSERT INTO users (full_name, email, password) VALUES (?, ?, ?)");
+                $stmt->execute([$name, $email, $pass]);
+                unset($_SESSION['reg_attempts']);
+                $msg = ['success', 'Account created! <a href="login.php">Login here</a>'];
+            }
         }
     }
 }
@@ -60,14 +84,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
-            <button id="use-other-btn" class="google-pill-btn" type="button">Use a different account</button>
-            <button id="cancel-btn" class="google-pill-btn" type="button">Cancel</button>
+            <button id="use-other-btn" class="auth-secondary-btn" type="button">Use a different account</button>
+            <button id="cancel-btn" class="auth-secondary-btn" type="button">Cancel</button>
         </div>
     </div>
 
     <!-- 2. Standard Register Form View -->
     <div id="standard-register-view">
         <form method="POST" action="register.php">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
             <div class="form-group">
                 <label>Full Name</label>
                 <input type="text" name="name" required style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; background: var(--card-bg); color: var(--text);">
@@ -78,7 +103,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" name="pass" required style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; background: var(--card-bg); color: var(--text);">
+                <div class="password-input-wrap">
+                    <input type="password" name="pass" required style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; background: var(--card-bg); color: var(--text);">
+                    <button type="button" class="password-toggle-btn" aria-label="Toggle password visibility"><i class="fa-solid fa-eye"></i></button>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary" style="width:100%; padding: 0.75rem; border-radius: 10px;">Create Account</button>
         </form>
@@ -166,35 +194,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     color: var(--error);
     background: var(--error-light);
 }
-.google-pill-btn {
+.auth-secondary-btn {
     border: 1.5px solid var(--champagne-border, #E8CD9E);
     background: var(--card-bg);
     color: #06433B;
-    border-radius: 20px;
+    border-radius: 8px;
     padding: 8px 16px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
 }
-.google-pill-btn:hover {
+.auth-secondary-btn:hover {
     background: #06433B;
     color: #F8E7C9;
     border-color: #06433B;
 }
-[data-theme="dark"] .google-pill-btn {
+[data-theme="dark"] .auth-secondary-btn {
     color: #F8E7C9;
 }
-[data-theme="dark"] .google-pill-btn:hover {
+[data-theme="dark"] .auth-secondary-btn:hover {
     background: #F8E7C9;
     color: #06433B;
-}
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
-}
-.google-pill-btn:hover {
-    background: var(--primary-light);
-    border-color: var(--primary);
 }
 </style>
 
@@ -214,13 +235,8 @@ document.addEventListener('DOMContentLoaded', function() {
         accounts = [];
     }
 
-    // Pre-populate if empty (same list as login page for consistency)
-    if (accounts.length === 0) {
-        accounts = [
-            { email: 'paramshah647@gmail.com', name: 'Param Shah', image: null },
-            { email: 'paramshaha41@gmail.com', name: 'PARAM SHAH', image: null }
-        ];
-        localStorage.setItem('saved_accounts', JSON.stringify(accounts));
+    if (!Array.isArray(accounts)) {
+        accounts = [];
     }
 
     // Render list

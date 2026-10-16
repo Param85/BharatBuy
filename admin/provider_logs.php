@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin — Provider Health Logs
+ * Admin - Provider Health Logs
  * Browse provider_logs with filters.
  */
 require_once __DIR__ . '/includes/admin_auth.php';
@@ -126,7 +126,7 @@ try {
                                 <?php if ($log['error_message']): ?>
                                     <span class="truncate text-danger" style="display:inline-block; max-width: 280px;" title="<?= htmlspecialchars($log['error_message']); ?>"><?= htmlspecialchars($log['error_message']); ?></span>
                                 <?php else: ?>
-                                    <span class="text-muted">—</span>
+                                    <span class="text-muted">-</span>
                                 <?php endif; ?>
                             </td>
                             <td class="text-muted"><?= date('M j, g:i:s A', strtotime($log['logged_at'])); ?></td>

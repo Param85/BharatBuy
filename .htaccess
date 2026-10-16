@@ -1,0 +1,58 @@
+# BharatBuy Apache Security Configuration
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /BharatBuy/
+
+    # Clean URL routing for legal pages
+    RewriteRule ^privacy-policy/?$ privacy-policy.php [L,QSA]
+    RewriteRule ^terms-and-conditions/?$ terms-and-conditions.php [L,QSA]
+</IfModule>
+
+# Disable Directory Browsing
+Options -Indexes
+
+# Block sensitive files and extensions
+<FilesMatch "^\.(env|git|vscode|idea)|(\.sql|\.log|\.md|composer\.(json|lock)|package(-lock)?\.json)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Block diagnostic/test scripts and sensitive previews from direct access
+<FilesMatch "^(mail_preview\.html|test_gemini_api\.php|test_smtp_mailer\.php)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Prevent direct access to database directory
+<IfModule mod_rewrite.c>
+    RewriteRule ^database/ - [F,L,NC]
+</IfModule>
+
+# Security HTTP Headers
+<IfModule mod_headers.c>
+    # Prevent MIME type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Prevent clickjacking / framing
+    Header always set X-Frame-Options "SAMEORIGIN"
+
+    # Referrer policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # XSS Protection for legacy browsers
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Permissions Policy (allow microphone for self to support speech recognition)
+    Header always set Permissions-Policy "camera=(), microphone=(self), geolocation=()"
+</IfModule>
+

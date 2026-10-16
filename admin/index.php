@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Dashboard — Analytics Overview
+ * Admin Dashboard - Analytics Overview
  * KPI stat cards + Chart.js charts
  */
 require_once __DIR__ . '/includes/admin_auth.php';
@@ -121,11 +121,11 @@ document.addEventListener('DOMContentLoaded', function() {
         responsive: true,
         maintainAspectRatio: true,
         plugins: {
-            legend: { labels: { color: '#94A3B8', font: { family: 'Inter', size: 12 } } }
+            legend: { labels: { color: '#94A3B8', font: { family: "'Plus Jakarta Sans', sans-serif", size: 12 } } }
         },
         scales: {
-            x: { ticks: { color: '#64748B', font: { size: 11 } }, grid: { color: 'rgba(51, 65, 85, 0.3)' } },
-            y: { ticks: { color: '#64748B', font: { size: 11 } }, grid: { color: 'rgba(51, 65, 85, 0.3)' }, beginAtZero: true }
+            x: { ticks: { color: '#64748B', font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 } }, grid: { color: 'rgba(51, 65, 85, 0.3)' } },
+            y: { ticks: { color: '#64748B', font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 } }, grid: { color: 'rgba(51, 65, 85, 0.3)' }, beginAtZero: true }
         }
     };
 
@@ -138,12 +138,12 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [{
                 label: 'Registrations',
                 data: regData.map(r => r.count),
-                borderColor: '#6366F1',
-                backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                borderColor: '#10B981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
                 borderWidth: 2,
                 fill: true,
                 tension: 0.4,
-                pointBackgroundColor: '#6366F1',
+                pointBackgroundColor: '#10B981',
                 pointRadius: 3
             }]
         },
@@ -184,13 +184,13 @@ document.addEventListener('DOMContentLoaded', function() {
         options: {
             responsive: true,
             cutout: '70%',
-            plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8', font: { family: 'Inter', size: 12 }, padding: 16 } } }
+            plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8', font: { family: "'Plus Jakarta Sans', sans-serif", size: 12 }, padding: 16 } } }
         }
     });
 
     // Chatbot source pie
     const chatData = <?= json_encode($chatSources); ?>;
-    const sourceColors = { gemini: '#6366F1', fallback: '#F59E0B', rate_limit: '#EF4444', rejected: '#64748B' };
+    const sourceColors = { gemini: '#10B981', fallback: '#F59E0B', rate_limit: '#EF4444', rejected: '#64748B' };
     new Chart(document.getElementById('chatSourceChart'), {
         type: 'doughnut',
         data: {
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
         options: {
             responsive: true,
             cutout: '70%',
-            plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8', font: { family: 'Inter', size: 12 }, padding: 16 } } }
+            plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8', font: { family: "'Plus Jakarta Sans', sans-serif", size: 12 }, padding: 16 } } }
         }
     });
 });

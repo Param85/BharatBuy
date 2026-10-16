@@ -9,27 +9,52 @@ if (isLoggedIn()) {
 }
 
 $error = '';
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = trim($_POST['email']);
-    $pass = $_POST['pass'];
 
-    if (empty($email) || empty($pass)) {
-        $error = "All fields are required!";
+// Rate Limiting Configuration: max 5 failed attempts in 5 minutes
+if (!isset($_SESSION['login_attempts'])) {
+    $_SESSION['login_attempts'] = ['count' => 0, 'last_attempt' => time()];
+}
+if (time() - $_SESSION['login_attempts']['last_attempt'] > 300) {
+    $_SESSION['login_attempts'] = ['count' => 0, 'last_attempt' => time()];
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_SESSION['login_attempts']['count'] >= 5) {
+        $remaining = max(1, ceil((300 - (time() - $_SESSION['login_attempts']['last_attempt'])) / 60));
+        $error = "Too many failed attempts. Please wait {$remaining} minute(s) before trying again.";
+    } elseif (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
+        $error = "Security validation failed. Please refresh and try again.";
     } else {
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->execute([$email]);
-        $user = $stmt->fetch();
+        $email = trim($_POST['email'] ?? '');
+        $pass = $_POST['pass'] ?? '';
 
-        if ($user && password_verify($pass, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_name'] = $user['full_name'];
-            $_SESSION['user_email'] = $user['email'];
-            $_SESSION['profile_image'] = $user['profile_image'];
-            $_SESSION['is_admin'] = ((int)($user['is_admin'] ?? 0) === 1);
-            header("Location: dashboard.php");
-            exit();
+        if (empty($email) || empty($pass)) {
+            $error = "All fields are required!";
         } else {
-            $error = "Invalid credentials!";
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            $user = $stmt->fetch();
+
+            if ($user && password_verify($pass, $user['password'])) {
+                // Reset failed attempts upon successful login
+                unset($_SESSION['login_attempts']);
+
+                // Prevent session fixation
+                regenerate_session_id();
+
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_name'] = $user['full_name'];
+                $_SESSION['user_email'] = $user['email'];
+                $_SESSION['profile_image'] = $user['profile_image'];
+                $_SESSION['is_admin'] = ((int)($user['is_admin'] ?? 0) === 1);
+                
+                header("Location: dashboard.php");
+                exit();
+            } else {
+                $_SESSION['login_attempts']['count']++;
+                $_SESSION['login_attempts']['last_attempt'] = time();
+                $error = "Invalid credentials!";
+            }
         }
     }
 }
@@ -66,8 +91,8 @@ require_once __DIR__ . '/includes/header.php';
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
-            <button id="use-other-btn" class="google-pill-btn" type="button">Use a different account</button>
-            <button id="cancel-btn" class="google-pill-btn" type="button">Cancel</button>
+            <button id="use-other-btn" class="auth-secondary-btn" type="button">Use a different account</button>
+            <button id="cancel-btn" class="auth-secondary-btn" type="button">Cancel</button>
         </div>
     </div>
 
@@ -80,10 +105,14 @@ require_once __DIR__ . '/includes/header.php';
         </div>
 
         <form method="POST" action="login.php">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
             <input type="hidden" name="email" id="password-view-email-input">
             <div class="form-group">
                 <label for="password-view-pass">Password</label>
-                <input type="password" name="pass" id="password-view-pass" required style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; background: var(--card-bg); color: var(--text);">
+                <div class="password-input-wrap">
+                    <input type="password" name="pass" id="password-view-pass" required style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; background: var(--card-bg); color: var(--text);">
+                    <button type="button" class="password-toggle-btn" aria-label="Toggle password visibility"><i class="fa-solid fa-eye"></i></button>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary" style="width:100%; padding: 0.75rem; border-radius: 10px;">Login</button>
         </form>
@@ -96,13 +125,17 @@ require_once __DIR__ . '/includes/header.php';
     <!-- 3. Standard Login View (Blank Form) -->
     <div id="standard-login-view">
         <form method="POST" action="login.php" id="standard-login-form">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
             <div class="form-group">
                 <label for="standard-email-input">Email</label>
                 <input type="email" name="email" id="standard-email-input" required style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; background: var(--card-bg); color: var(--text);">
             </div>
             <div class="form-group">
                 <label for="standard-pass-input">Password</label>
-                <input type="password" name="pass" id="standard-pass-input" required style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; background: var(--card-bg); color: var(--text);">
+                <div class="password-input-wrap">
+                    <input type="password" name="pass" id="standard-pass-input" required style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 1rem; outline: none; background: var(--card-bg); color: var(--text);">
+                    <button type="button" class="password-toggle-btn" aria-label="Toggle password visibility"><i class="fa-solid fa-eye"></i></button>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary" style="width:100%; padding: 0.75rem; border-radius: 10px;">Login</button>
         </form>
@@ -190,26 +223,26 @@ require_once __DIR__ . '/includes/header.php';
     color: var(--error);
     background: var(--error-light);
 }
-.google-pill-btn {
+.auth-secondary-btn {
     border: 1.5px solid var(--champagne-border, #E8CD9E);
     background: var(--card-bg);
     color: #06433B;
-    border-radius: 20px;
+    border-radius: 8px;
     padding: 8px 16px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
 }
-.google-pill-btn:hover {
+.auth-secondary-btn:hover {
     background: #06433B;
     color: #F8E7C9;
     border-color: #06433B;
 }
-[data-theme="dark"] .google-pill-btn {
+[data-theme="dark"] .auth-secondary-btn {
     color: #F8E7C9;
 }
-[data-theme="dark"] .google-pill-btn:hover {
+[data-theme="dark"] .auth-secondary-btn:hover {
     background: #F8E7C9;
     color: #06433B;
 }
@@ -249,12 +282,8 @@ document.addEventListener('DOMContentLoaded', function() {
         accounts = [];
     }
 
-    if (accounts.length === 0) {
-        accounts = [
-            { email: 'paramshah647@gmail.com', name: 'Param Shah', image: null },
-            { email: 'paramshaha41@gmail.com', name: 'PARAM SHAH', image: null }
-        ];
-        localStorage.setItem('saved_accounts', JSON.stringify(accounts));
+    if (!Array.isArray(accounts)) {
+        accounts = [];
     }
 
     // Render list

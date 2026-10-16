@@ -7,26 +7,16 @@ require_once __DIR__ . '/includes/header.php';
 
 <!-- 1. Hero Section -->
 <section class="home-hero">
-    <div class="home-hero-glow-1"></div>
-    <div class="home-hero-glow-2"></div>
-
     <div class="home-hero-inner">
-        <!-- Live Status Pill Badge -->
-        <div class="announcement-badge">
-            <span class="badge-pulse"></span>
-            <span>Next-Gen Cross-Store Shopping Intelligence</span>
-            <i class="fa-solid fa-arrow-trend-up" style="color: #06433B;"></i>
-        </div>
-
         <!-- Headline (Retaining #hero-title for multi-language switcher) -->
         <h1 id="hero-title" class="home-hero-title">
             Compare. Analyze.<br>
-            <span class="gradient-text">Shop Smarter.</span>
+            <span class="hero-highlight">Shop Smarter.</span>
         </h1>
 
         <!-- Subtitle (Retaining #hero-desc) -->
         <p id="hero-desc" class="home-hero-desc">
-            The intelligent shopping assistant that searches multiple online platforms simultaneously and recommends the absolute best deal using a smart scoring algorithm.
+            Compare real-time prices across Amazon, eBay, and Flipkart. Track price drops and discover authentic savings before you buy.
         </p>
 
 
@@ -44,7 +34,7 @@ require_once __DIR__ . '/includes/header.php';
                     Go to Dashboard <i class="fa-solid fa-arrow-right" style="margin-left: 0.5rem;"></i>
                 </a>
                 <a href="#live-demo" class="btn-champagne-secondary">
-                    <i class="fa-solid fa-sliders" style="color: #06433B;"></i> Explore Live Demo
+                    <i class="fa-solid fa-sliders" style="color: #06433B;"></i> See Price Matrix
                 </a>
             <?php endif; ?>
         </div>
@@ -56,8 +46,7 @@ require_once __DIR__ . '/includes/header.php';
     <div class="category-carousel-header">
         <div class="category-header-title">
             <div class="category-header-title-row">
-                <span class="category-pulse-dot" aria-hidden="true"></span>
-                <h3>Recommended Categories</h3>
+                <h2>Recommended Categories</h2>
             </div>
             <span class="category-header-subtitle">Swipe or scroll to explore curated real-time multi-store price comparisons</span>
         </div>
@@ -99,7 +88,7 @@ require_once __DIR__ . '/includes/header.php';
 
             <a href="beauty.php" class="category-card">
                 <div class="category-icon-box">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <i class="fa-solid fa-spa"></i>
                 </div>
                 <div class="category-name">Beauty</div>
                 <span class="category-tag">Glow &amp; Wellness</span>
@@ -155,30 +144,26 @@ require_once __DIR__ . '/includes/header.php';
         </div>
     </div>
 
-    <!-- Dynamic Moving Horizontal Line Indicator (Moves on Swipe/Scroll) -->
-    <div class="category-swipe-line-track" aria-hidden="true">
-        <div class="category-swipe-line-thumb" id="categoryLineThumb"></div>
-    </div>
 </section>
 
-<!-- 2. Trust Metrics Bar -->
-<section class="trust-metrics-section">
-    <div class="metrics-glass-card">
+<!-- 2. Core Platform Capabilities Highlights -->
+<section class="trust-metrics-section" aria-label="Core Capabilities">
+    <div class="metrics-card">
         <div class="metric-item">
-            <div class="metric-number">₹<span>2.4</span> Cr+</div>
-            <div class="metric-label">Shopper Savings Generated</div>
+            <div class="metric-number"><i class="fa-solid fa-store" style="font-size: 1.5rem; color: #06433B;"></i></div>
+            <div class="metric-label">Multi-Store Product Search</div>
         </div>
         <div class="metric-item">
-            <div class="metric-number"><span>180</span>K+</div>
-            <div class="metric-label">Live Products Indexed</div>
+            <div class="metric-number"><i class="fa-solid fa-scale-balanced" style="font-size: 1.5rem; color: #06433B;"></i></div>
+            <div class="metric-label">Weighted Value Scoring Engine</div>
         </div>
         <div class="metric-item">
-            <div class="metric-number"><span>4.9</span> ★</div>
-            <div class="metric-label">Average User Satisfaction</div>
+            <div class="metric-number"><i class="fa-solid fa-bell" style="font-size: 1.5rem; color: #06433B;"></i></div>
+            <div class="metric-label">Automated Price Drop Alerts</div>
         </div>
         <div class="metric-item">
-            <div class="metric-number">&lt; <span>1.2</span>s</div>
-            <div class="metric-label">Multi-Store Scan Latency</div>
+            <div class="metric-number"><i class="fa-solid fa-coins" style="font-size: 1.5rem; color: #06433B;"></i></div>
+            <div class="metric-label">Real-Time Currency &amp; Localization</div>
         </div>
     </div>
 </section>
@@ -199,17 +184,16 @@ require_once __DIR__ . '/includes/header.php';
 <!-- 4. Interactive Live Comparison Simulation Showcase -->
 <section id="live-demo" class="showcase-section">
     <div class="section-header-center">
-        <span class="section-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> Live Demonstration</span>
         <h2 class="section-title">See BharatBuy Intelligence in Action</h2>
-        <p class="section-subtitle">Our weighted scoring engine analyzes merchant prices, seller credibility ratings, and warranty conditions in real-time to uncover the true best value.</p>
+        <p class="section-subtitle">Our weighted scoring engine evaluates merchant prices, seller credibility ratings, and discount depth in real-time to find the best available offer.</p>
     </div>
 
     <!-- Category Tabs -->
-    <div class="showcase-tabs">
-        <button type="button" class="showcase-tab active" onclick="switchShowcase('phone')"><i class="fa-solid fa-mobile"></i> Smartphones</button>
-        <button type="button" class="showcase-tab" onclick="switchShowcase('laptop')"><i class="fa-solid fa-laptop"></i> Laptops</button>
-        <button type="button" class="showcase-tab" onclick="switchShowcase('audio')"><i class="fa-solid fa-headphones"></i> Audio</button>
-        <button type="button" class="showcase-tab" onclick="switchShowcase('console')"><i class="fa-solid fa-gamepad"></i> Gaming</button>
+    <div class="showcase-tabs" role="tablist" aria-label="Product Showcase Categories">
+        <button type="button" class="showcase-tab active" role="tab" aria-selected="true" onclick="switchShowcase('phone')"><i class="fa-solid fa-mobile"></i> Smartphones</button>
+        <button type="button" class="showcase-tab" role="tab" aria-selected="false" onclick="switchShowcase('laptop')"><i class="fa-solid fa-laptop"></i> Laptops</button>
+        <button type="button" class="showcase-tab" role="tab" aria-selected="false" onclick="switchShowcase('audio')"><i class="fa-solid fa-headphones"></i> Audio</button>
+        <button type="button" class="showcase-tab" role="tab" aria-selected="false" onclick="switchShowcase('console')"><i class="fa-solid fa-gamepad"></i> Gaming</button>
     </div>
 
     <!-- Simulated Comparison Card -->
@@ -234,9 +218,23 @@ require_once __DIR__ . '/includes/header.php';
 
         <!-- Right Column: Cross-Platform Prices -->
         <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-                <h4 style="font-family: 'Poppins', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--text); margin: 0;">Multi-Store Price Matrix</h4>
-                <span style="font-size: 0.8rem; color: #06433B; font-weight: 700;"><i class="fa-solid fa-circle-dot"></i> Live Prices Updated</span>
+            <div class="matrix-heading-row">
+                <div>
+                    <h3 class="matrix-title">Multi-Store Price Matrix</h3>
+                    <p class="matrix-subtitle">Real-time normalized comparison across authorized retailers</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+                    <button type="button" class="btn-copy" data-copy="<?= htmlspecialchars('http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/BharatBuy/index.php#live-demo'); ?>" title="Copy link to this live comparison">
+                        <i class="fa-regular fa-copy"></i> Share
+                    </button>
+                    <!-- 18. Last Updated Date Badge -->
+                    <span class="matrix-live-badge"><i class="fa-solid fa-circle-dot"></i> Live Rates &middot; Verified <?= date('M d, Y'); ?></span>
+                </div>
+            </div>
+
+            <div class="matrix-table-header" aria-hidden="true">
+                <span>Retailer &amp; Fulfillment</span>
+                <span>Live Price &amp; Savings</span>
             </div>
 
             <div class="deals-preview-list" id="showcaseDealsList">
@@ -259,101 +257,76 @@ require_once __DIR__ . '/includes/header.php';
 <!-- 5. How It Works Workflow Section -->
 <section id="how-it-works" class="workflow-section">
     <div class="section-header-center">
-        <span class="section-badge"><i class="fa-solid fa-diagram-project"></i> Simple 3-Step Process</span>
         <h2 class="section-title">How BharatBuy Saves You Money</h2>
         <p class="section-subtitle">No more opening 20 browser tabs. Find authentic deals and protect your budget with three simple steps.</p>
     </div>
 
-    <div class="steps-container">
+    <div class="workflow-steps">
         <!-- Step 1 -->
-        <div class="step-card">
-            <div class="step-number-bubble">1</div>
-            <div class="step-icon-wrap">
-                <i class="fa-solid fa-magnifying-glass-location"></i>
+        <div class="workflow-step">
+            <div class="workflow-step-num">01</div>
+            <div class="workflow-step-body">
+                <h3>Universal Multi-Search</h3>
+                <p>Type any gadget name or paste a direct product link from Amazon or eBay. Our distributed crawler initializes simultaneously across all connected providers.</p>
             </div>
-            <h3>Universal Multi-Search</h3>
-            <p>Type any gadget name or paste a direct product link from Amazon or eBay. Our distributed crawler initializes simultaneously across all connected providers.</p>
         </div>
 
         <!-- Step 2 -->
-        <div class="step-card">
-            <div class="step-number-bubble">2</div>
-            <div class="step-icon-wrap">
-                <i class="fa-solid fa-scale-balanced"></i>
+        <div class="workflow-step">
+            <div class="workflow-step-num">02</div>
+            <div class="workflow-step-body">
+                <h3>Weighted Scoring</h3>
+                <p>We normalize foreign exchange rates (USD to INR), verify merchant feedback ratings, and weigh discount depth to compute an unbiased Best Deal score.</p>
             </div>
-            <h3>AI Weighted Scoring</h3>
-            <p>We normalize foreign exchange rates (USD to INR), verify merchant feedback ratings, and weigh discount depth to compute an unbiased Best Deal score.</p>
         </div>
 
         <!-- Step 3 -->
-        <div class="step-card">
-            <div class="step-number-bubble">3</div>
-            <div class="step-icon-wrap">
-                <i class="fa-solid fa-bell-concierge"></i>
+        <div class="workflow-step">
+            <div class="workflow-step-num">03</div>
+            <div class="workflow-step-body">
+                <h3>Automated Price Tracker</h3>
+                <p>Set a target budget price. BharatBuy continuously checks price fluctuations in the background and sends an email the moment it drops.</p>
             </div>
-            <h3>Automated Price Tracker</h3>
-            <p>Not ready to buy today? Set a target budget price. BharatBuy continuously checks price fluctuations in the background and sends an email the moment it drops.</p>
         </div>
     </div>
 </section>
 
-<!-- 6. Features Bento Grid (Preserving IDs: feature-title-1/2/3 for translations) -->
+<!-- 6. Features Grid (Preserving IDs: feature-title-1/2/3 for translations) -->
 <section class="features-bento-section">
     <div class="section-header-center">
-        <span class="section-badge"><i class="fa-solid fa-cubes"></i> Core Capabilities</span>
         <h2 class="section-title">Built for Modern Smart Shoppers</h2>
         <p class="section-subtitle">Every feature is designed to eliminate buyer regret and maximize your purchasing power.</p>
     </div>
 
     <div class="bento-grid">
-        <!-- Card 1: Retains #feature-title-1 and #feature-desc-1 -->
-        <div class="bento-card bento-card-large">
-            <div class="bento-icon-box">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <h3 id="feature-title-1">Smart Value Scoring</h3>
-            <p id="feature-desc-1">Our weighted engine processes price, merchant ratings, and customer reviews to calculate the absolute best product value.</p>
-            <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                <span class="trending-chip" style="cursor: default;"><i class="fa-solid fa-shield-halved" style="color: #06433B;"></i> Fraud Resistant</span>
-                <span class="trending-chip" style="cursor: default;"><i class="fa-solid fa-bolt" style="color: #06433B;"></i> Sub-second Scoring</span>
-                <span class="trending-chip" style="cursor: default;"><i class="fa-solid fa-calculator" style="color: #06433B;"></i> Multi-attribute Weighting</span>
-            </div>
+        <!-- Card 1: Smart Value Scoring -->
+        <div class="bento-card">
+            <h3 id="feature-title-1"><i class="fas fa-chart-line" style="color: var(--primary); margin-right: 0.5rem;"></i> Smart Value Scoring</h3>
+            <p id="feature-desc-1">Our weighted engine evaluates merchant reputation, pricing differences, and historical trends to determine optimal purchase value.</p>
         </div>
 
-        <!-- Card 2: Retains #feature-title-2 and #feature-desc-2 -->
+        <!-- Card 2: Multi-Site Integration -->
         <div class="bento-card">
-            <div class="bento-icon-box">
-                <i class="fas fa-shield-alt"></i>
-            </div>
-            <h3 id="feature-title-2">Multi-Site Integration</h3>
+            <h3 id="feature-title-2"><i class="fas fa-shield-alt" style="color: var(--primary); margin-right: 0.5rem;"></i> Multi-Site Integration</h3>
             <p id="feature-desc-2">Aggregate product results from major e-commerce platforms like Amazon and eBay dynamically in a single interface.</p>
         </div>
 
-        <!-- Card 3: Retains #feature-title-3 and #feature-desc-3 -->
+        <!-- Card 3: Search Tracking -->
         <div class="bento-card">
-            <div class="bento-icon-box">
-                <i class="fas fa-history"></i>
-            </div>
-            <h3 id="feature-title-3">Search Tracking</h3>
+            <h3 id="feature-title-3"><i class="fas fa-history" style="color: var(--primary); margin-right: 0.5rem;"></i> Search Tracking</h3>
             <p id="feature-desc-3">Review your search logs and access previous product comparisons instantly without re-typing search keywords.</p>
         </div>
 
         <!-- Card 4: Price Drop Tracking Alerts -->
         <div class="bento-card">
-            <div class="bento-icon-box">
-                <i class="fa-solid fa-bell"></i>
-            </div>
-            <h3>Automated Price Alerts</h3>
+            <h3><i class="fa-solid fa-bell" style="color: var(--primary); margin-right: 0.5rem;"></i> Automated Price Alerts</h3>
             <p>Save products to your watchlist with custom target prices. Receive automatic high-priority email alerts with direct one-click purchase links.</p>
         </div>
 
         <!-- Card 5: Currency & International Localization -->
         <div class="bento-card">
-            <div class="bento-icon-box">
-                <i class="fa-solid fa-globe"></i>
-            </div>
-            <h3>Dynamic Currency & Localization</h3>
-            <p>Seamlessly toggle currencies between INR (₹), USD ($), EUR (€), and GBP (£) with live conversion, alongside 5 international languages.</p>
+            <h3><i class="fa-solid fa-globe" style="color: var(--primary); margin-right: 0.5rem;"></i> Dynamic Currency &amp; Localization</h3>
+            <p>Toggle currencies between INR (₹), USD ($), EUR (€), and GBP (£) with live conversion, alongside 5 international languages.</p>
         </div>
     </div>
 </section>
@@ -362,13 +335,10 @@ require_once __DIR__ . '/includes/header.php';
 <section class="ai-spotlight-section">
     <div class="ai-spotlight-card">
         <div class="ai-card-content">
-            <span class="preview-badge" style="background: rgba(248, 231, 201, 0.2); color: #F8E7C9; margin-bottom: 1rem; display: inline-block; border: 1px solid rgba(248, 231, 201, 0.3);">
-                <i class="fa-solid fa-sparkles"></i> Powered by Google Gemini AI
-            </span>
             <h3>Ask Your Personal AI Shopping Advisor</h3>
             <p>Confused between multiple variants or technical specifications? Chat with our integrated assistant right in the corner for instant advice, pros/cons, and buying guides.</p>
             <button type="button" class="btn-champagne-secondary" onclick="openChatbotWidget()" style="cursor: pointer;">
-                <i class="fa-solid fa-comments" style="color: #06433B;"></i> Try Chatbot Now
+                <i class="fa-solid fa-comments" style="color: #06433B;"></i> Ask Shopping Assistant
             </button>
         </div>
 
@@ -384,21 +354,71 @@ require_once __DIR__ . '/includes/header.php';
     </div>
 </section>
 
+<!-- 19. Frequently Asked Questions (Expandable FAQ) -->
+<section class="faq-section" aria-label="Frequently Asked Questions">
+    <div class="section-header-center">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-subtitle">Everything you need to know about how BharatBuy discovers genuine deals and automates price tracking.</p>
+    </div>
+
+    <div class="faq-container">
+        <details class="faq-item" open>
+            <summary class="faq-question">
+                <span>How does BharatBuy compare prices across Amazon, eBay, and Flipkart?</span>
+                <i class="fa-solid fa-chevron-down faq-icon"></i>
+            </summary>
+            <div class="faq-answer">
+                <p>BharatBuy runs distributed background crawlers and official provider APIs to scan products simultaneously. We normalize prices across currencies (USD to INR), verify delivery timelines, and compute an objective Value Score to identify genuine offers.</p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <span>Are price drop alerts and wishlist tracking free of charge?</span>
+                <i class="fa-solid fa-chevron-down faq-icon"></i>
+            </summary>
+            <div class="faq-answer">
+                <p>Yes. You can save items to your personal watchlist and configure budget targets for free. When an authorized retailer drops their price to or below your target, our system immediately sends an automated email notification with direct purchase links.</p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <span>Does BharatBuy support real-time foreign currency conversion?</span>
+                <i class="fa-solid fa-chevron-down faq-icon"></i>
+            </summary>
+            <div class="faq-answer">
+                <p>Yes. In the Settings dropdown, you can switch between INR (₹), USD ($), EUR (€), and GBP (£). Foreign merchant listings like eBay Global are dynamically converted using live bank rates so you see your true landed cost.</p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <span>How is the BharatBuy "Value Score" calculated?</span>
+                <i class="fa-solid fa-chevron-down faq-icon"></i>
+            </summary>
+            <div class="faq-answer">
+                <p>Our scoring model evaluates net price (50%), merchant seller rating &amp; verified reviews (25%), delivery speed (15%), and discount depth compared to 30-day historical averages (10%).</p>
+            </div>
+        </details>
+    </div>
+</section>
+
 <!-- 8. Final High-Conversion CTA Banner -->
 <section class="cta-banner-section">
     <div class="cta-banner-card">
-        <h2>Ready to Stop Overpaying for Tech?</h2>
-        <p>Join smart Indian shoppers who save money and time on every purchase with BharatBuy's intelligent multi-store price engine.</p>
+        <h2>Ready to Compare Prices Before You Buy?</h2>
+        <p>Search across top online stores, review price trends, and receive automated alerts the moment prices drop.</p>
         <div style="display: flex; justify-content: center; gap: 1.25rem; flex-wrap: wrap;">
             <?php if(!isLoggedIn()): ?>
-                <a href="register.php" class="btn-emerald-primary" style="padding: 1.1rem 2.5rem; font-size: 1.05rem;">
+                <a href="register.php" class="btn-emerald-primary">
                     Create Free Account <i class="fa-solid fa-arrow-right" style="margin-left: 0.5rem;"></i>
                 </a>
-                <a href="login.php" class="btn-champagne-secondary" style="padding: 1.1rem 2.25rem;">
+                <a href="login.php" class="btn-champagne-secondary">
                     Sign In
                 </a>
             <?php else: ?>
-                <a href="dashboard.php" class="btn-emerald-primary" style="padding: 1.1rem 2.5rem; font-size: 1.05rem;">
+                <a href="dashboard.php" class="btn-emerald-primary">
                     Open Search Dashboard <i class="fa-solid fa-arrow-right" style="margin-left: 0.5rem;"></i>
                 </a>
             <?php endif; ?>
@@ -456,7 +476,7 @@ const SHOWCASE_DATA = {
         recommendation: '<strong>BharatBuy Recommendation:</strong> <strong>Flipkart</strong> offers the lowest net price with flat bank discount. Value Score: <strong>94/100</strong>.'
     },
     audio: {
-        badge: '<i class="fa-solid fa-fire"></i> Hot Price Drop',
+        badge: '<i class="fa-solid fa-tag"></i> 30-Day Low Price',
         img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80',
         title: 'Sony WH-1000XM5 Wireless Noise Cancelling Headphones',
         ratingStars: 4.7,
@@ -484,56 +504,90 @@ const SHOWCASE_DATA = {
 };
 
 function switchShowcase(categoryKey) {
-    // Switch active tab styling
-    document.querySelectorAll('.showcase-tab').forEach(tab => tab.classList.remove('active'));
-    if (window.event && window.event.currentTarget) {
-        window.event.currentTarget.classList.add('active');
-    }
+    // Switch active tab styling & ARIA state
+    const tabs = document.querySelectorAll('.showcase-tab');
+    tabs.forEach(tab => {
+        const isTarget = tab.getAttribute('onclick') && tab.getAttribute('onclick').includes("'" + categoryKey + "'");
+        if (isTarget) {
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+        } else {
+            tab.classList.remove('active');
+            tab.setAttribute('aria-selected', 'false');
+        }
+    });
 
     const data = SHOWCASE_DATA[categoryKey];
     if (!data) return;
 
-    // Update product preview
-    document.getElementById('showcaseBadge').innerHTML = data.badge;
-    document.getElementById('showcaseImg').src = data.img;
-    document.getElementById('showcaseTitle').innerText = data.title;
-    document.getElementById('showcaseRating').innerHTML = `
-        <i class="fa-solid fa-star"></i>
-        <i class="fa-solid fa-star"></i>
-        <i class="fa-solid fa-star"></i>
-        <i class="fa-solid fa-star"></i>
-        <i class="fa-solid fa-star-half-stroke"></i>
-        <span style="color: var(--text); font-weight: 700; margin-left: 0.3rem;">${data.ratingStars}</span>
-        <span style="color: var(--text-muted); font-size: 0.82rem;">(${data.reviewsCount} verified reviews)</span>
-    `;
-
-    // Render deals
     const listContainer = document.getElementById('showcaseDealsList');
-    listContainer.innerHTML = '';
-
-    data.deals.forEach(deal => {
-        const row = document.createElement('div');
-        row.className = 'deal-item-row' + (deal.isBest ? ' best-deal' : '');
-        row.innerHTML = `
-            <div class="deal-store-col">
-                <div class="deal-store-icon" style="color: ${deal.color};">
-                    <i class="${deal.icon}"></i>
-                </div>
-                <div class="deal-store-info">
-                    <h4>${deal.store}</h4>
-                    <span>${deal.status}</span>
+    if (listContainer) {
+        listContainer.innerHTML = `
+            <div class="skeleton-card" style="margin-bottom: 0.65rem; padding: 0.95rem;">
+                <div style="display: flex; gap: 0.85rem; align-items: center;">
+                    <div class="skeleton skeleton-avatar"></div>
+                    <div style="flex: 1;">
+                        <div class="skeleton skeleton-title" style="height: 0.95rem; width: 35%;"></div>
+                        <div class="skeleton skeleton-text" style="height: 0.75rem; width: 55%; margin: 0;"></div>
+                    </div>
+                    <div class="skeleton" style="width: 75px; height: 1.4rem; border-radius: 4px;"></div>
                 </div>
             </div>
-            <div class="deal-price-col">
-                <div class="deal-price-val ${deal.isBest ? 'highlight' : ''}">${deal.price}</div>
-                <span class="deal-tag-pill ${deal.isBest ? 'tag-best' : 'tag-diff'}">${deal.tag}</span>
+            <div class="skeleton-card" style="padding: 0.95rem;">
+                <div style="display: flex; gap: 0.85rem; align-items: center;">
+                    <div class="skeleton skeleton-avatar"></div>
+                    <div style="flex: 1;">
+                        <div class="skeleton skeleton-title" style="height: 0.95rem; width: 35%;"></div>
+                        <div class="skeleton skeleton-text" style="height: 0.75rem; width: 55%; margin: 0;"></div>
+                    </div>
+                    <div class="skeleton" style="width: 75px; height: 1.4rem; border-radius: 4px;"></div>
+                </div>
             </div>
         `;
-        listContainer.appendChild(row);
-    });
+    }
 
-    // Update recommendation text
-    document.getElementById('showcaseRecText').innerHTML = data.recommendation;
+    setTimeout(() => {
+        // Update product preview
+        document.getElementById('showcaseBadge').innerHTML = data.badge;
+        document.getElementById('showcaseImg').src = data.img;
+        document.getElementById('showcaseTitle').innerText = data.title;
+        document.getElementById('showcaseRating').innerHTML = `
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star-half-stroke"></i>
+            <span style="color: var(--text); font-weight: 700; margin-left: 0.3rem;">${data.ratingStars}</span>
+            <span style="color: var(--text-muted); font-size: 0.82rem;">(${data.reviewsCount} merchant ratings)</span>
+        `;
+
+        // Render deals
+        listContainer.innerHTML = '';
+
+        data.deals.forEach(deal => {
+            const row = document.createElement('div');
+            row.className = 'deal-item-row' + (deal.isBest ? ' best-deal' : '');
+            row.innerHTML = `
+                <div class="deal-store-col">
+                    <div class="deal-store-icon" style="color: ${deal.color};">
+                        <i class="${deal.icon}"></i>
+                    </div>
+                    <div class="deal-store-info">
+                        <h4>${deal.store}</h4>
+                        <span>${deal.status}</span>
+                    </div>
+                </div>
+                <div class="deal-price-col">
+                    <div class="deal-price-val ${deal.isBest ? 'highlight' : ''}">${deal.price}</div>
+                    <span class="deal-tag-pill ${deal.isBest ? 'tag-best' : 'tag-diff'}">${deal.tag}</span>
+                </div>
+            `;
+            listContainer.appendChild(row);
+        });
+
+        // Update recommendation text
+        document.getElementById('showcaseRecText').innerHTML = data.recommendation;
+    }, 140);
 }
 
 // Initialize showcase with default 'phone' category
@@ -542,35 +596,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Category Carousel Swiper & Moving Horizontal Line Logic
     const catTrack = document.getElementById('categoryTrack');
-    const catLineThumb = document.getElementById('categoryLineThumb');
     const catLeftBtn = document.getElementById('catScrollLeft');
     const catRightBtn = document.getElementById('catScrollRight');
 
-    if (catTrack && catLineThumb) {
-        function updateSwipeLine() {
-            const maxScroll = catTrack.scrollWidth - catTrack.clientWidth;
-            if (maxScroll <= 0) {
-                catLineThumb.style.width = '100%';
-                catLineThumb.style.left = '0%';
-                return;
-            }
-
-            // Calculate dynamic thumb width (ratio of viewport to total scrollable width)
-            const viewportRatio = catTrack.clientWidth / catTrack.scrollWidth;
-            const thumbWidthPercent = Math.max(16, Math.min(38, viewportRatio * 100));
-            catLineThumb.style.width = thumbWidthPercent + '%';
-
-            // Calculate progress percentage and position thumb along the line
-            const scrollFraction = Math.max(0, Math.min(1, catTrack.scrollLeft / maxScroll));
-            const maxLeftPercent = 100 - thumbWidthPercent;
-            catLineThumb.style.left = (scrollFraction * maxLeftPercent) + '%';
-        }
-
-        // Real-time synchronization on scroll (touch swiping, trackpad, mouse wheel)
-        catTrack.addEventListener('scroll', updateSwipeLine, { passive: true });
-        window.addEventListener('resize', updateSwipeLine);
-        setTimeout(updateSwipeLine, 100);
-
+    if (catTrack) {
         // Arrow button navigation
         if (catLeftBtn) {
             catLeftBtn.addEventListener('click', function() {

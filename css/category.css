@@ -57,7 +57,7 @@
     position: relative;
     background: linear-gradient(135deg, #06433B 0%, #0A5A50 60%, #042D28 100%);
     border: 1px solid var(--cat-champagne-border);
-    border-radius: 24px;
+    border-radius: var(--radius-md, 16px);
     padding: 3rem 2.5rem;
     color: #ffffff;
     box-shadow: 0 12px 36px rgba(6, 67, 59, 0.16);
@@ -66,15 +66,7 @@
 }
 
 .category-hero-banner::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -20%;
-    width: 480px;
-    height: 480px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(248, 231, 201, 0.18) 0%, transparent 70%);
-    pointer-events: none;
+    display: none;
 }
 
 .category-hero-content {
@@ -101,9 +93,8 @@
     font-size: 0.85rem;
     font-weight: 600;
     padding: 0.35rem 1rem;
-    border-radius: 9999px;
+    border-radius: 8px;
     margin-bottom: 1rem;
-    backdrop-filter: blur(8px);
 }
 
 .category-hero-banner h1 {
@@ -213,7 +204,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.55rem 1.15rem;
-    border-radius: 9999px;
+    border-radius: 8px;
     font-size: 0.9rem;
     font-weight: 550;
     text-decoration: none;
@@ -323,7 +314,7 @@
 .cat-product-card {
     background: var(--card-bg);
     border: 1px solid var(--border);
-    border-radius: 20px;
+    border-radius: var(--radius-md, 16px);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -374,14 +365,13 @@
     align-items: center;
     gap: 0.35rem;
     padding: 0.3rem 0.65rem;
-    border-radius: 9999px;
+    border-radius: 6px;
     font-size: 0.76rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.03em;
-    background: rgba(255, 255, 255, 0.92);
+    background: rgba(255, 255, 255, 0.96);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(6px);
 }
 
 [data-theme="dark"] .cat-store-pill {
@@ -541,7 +531,7 @@
     justify-content: center;
     gap: 0.5rem;
     padding: 0.7rem 1rem;
-    border-radius: 12px;
+    border-radius: var(--radius-sm, 10px);
     background: var(--cat-emerald);
     color: var(--cat-champagne);
     border: 1px solid var(--cat-emerald);
@@ -574,7 +564,7 @@
 .cat-btn-secondary {
     width: 40px;
     height: 40px;
-    border-radius: 12px;
+    border-radius: var(--radius-sm, 10px);
     background: var(--bg);
     border: 1px solid var(--border);
     color: var(--text-muted);
@@ -585,12 +575,19 @@
     font-size: 0.95rem;
     transition: all 0.2s ease;
     text-decoration: none;
+    flex-shrink: 0;
 }
 
 .cat-btn-secondary:hover {
-    border-color: #E11D48;
-    color: #E11D48;
-    background: rgba(225, 29, 72, 0.05);
+    border-color: var(--cat-emerald);
+    color: var(--cat-emerald);
+    background: var(--cat-champagne-light);
+}
+
+[data-theme="dark"] .cat-btn-secondary:hover {
+    border-color: var(--cat-champagne);
+    color: var(--cat-champagne);
+    background: rgba(248, 231, 201, 0.08);
 }
 
 /* Empty State */
@@ -658,7 +655,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.6rem 1.2rem;
-    border-radius: 9999px;
+    border-radius: 8px;
     background: var(--bg);
     border: 1px solid var(--border);
     color: var(--text);

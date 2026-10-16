@@ -1,12 +1,20 @@
 <?php
 /**
- * Admin AJAX — Chatbot FAQ CRUD
+ * Admin AJAX - Chatbot FAQ CRUD
  * Handles: add_faq, edit_faq, delete_faq
  */
 require_once __DIR__ . '/../includes/admin_auth.php';
 requireAdmin();
 
 header('Content-Type: application/json');
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Method not allowed.']);
+    exit;
+}
+
+validate_csrf_or_exit();
 
 $action = $_POST['action'] ?? '';
 
@@ -19,6 +27,10 @@ switch ($action) {
             echo json_encode(['success' => false, 'message' => 'Keyword and answer are required.']);
             exit;
         }
+        if (strlen($keyword) > 255 || strlen($answer) > 5000) {
+            echo json_encode(['success' => false, 'message' => 'Input length exceeds allowable limits.']);
+            exit;
+        }
         try {
             $stmt = $pdo->prepare("INSERT INTO chatbot (keyword, answer) VALUES (?, ?)");
             $stmt->execute([$keyword, $answer]);
@@ -27,7 +39,8 @@ switch ($action) {
             logAdminAction($pdo, 'Added FAQ', 'chatbot', $newId, "Keyword: $keyword");
             echo json_encode(['success' => true, 'message' => 'FAQ added successfully.', 'id' => $newId]);
         } catch (PDOException $e) {
-            echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+            error_log("admin_chatbot error (add_faq): " . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'An internal database error occurred while creating FAQ.']);
         }
         break;
 
@@ -39,6 +52,10 @@ switch ($action) {
             echo json_encode(['success' => false, 'message' => 'All fields are required.']);
             exit;
         }
+        if (strlen($keyword) > 255 || strlen($answer) > 5000) {
+            echo json_encode(['success' => false, 'message' => 'Input length exceeds allowable limits.']);
+            exit;
+        }
         try {
             $stmt = $pdo->prepare("UPDATE chatbot SET keyword = ?, answer = ? WHERE id = ?");
             $stmt->execute([$keyword, $answer, $faqId]);
@@ -46,7 +63,8 @@ switch ($action) {
             logAdminAction($pdo, 'Edited FAQ', 'chatbot', $faqId, "Keyword: $keyword");
             echo json_encode(['success' => true, 'message' => 'FAQ updated successfully.']);
         } catch (PDOException $e) {
-            echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+            error_log("admin_chatbot error (edit_faq): " . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'An internal database error occurred while updating FAQ.']);
         }
         break;
 
@@ -63,7 +81,8 @@ switch ($action) {
             logAdminAction($pdo, 'Deleted FAQ', 'chatbot', $faqId);
             echo json_encode(['success' => true, 'message' => 'FAQ deleted successfully.']);
         } catch (PDOException $e) {
-            echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+            error_log("admin_chatbot error (delete_faq): " . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'An internal database error occurred while deleting FAQ.']);
         }
         break;
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin — User Management
+ * Admin - User Management
  * Paginated user table with search, admin toggle, and delete.
  */
 require_once __DIR__ . '/includes/admin_auth.php';
@@ -111,7 +111,10 @@ try {
                                         <i class="fa-solid fa-user-shield"></i>
                                     </button>
                                 <?php endif; ?>
-                                <button class="admin-btn-icon danger" title="Delete User" onclick="deleteUser(<?= $u['id']; ?>, '<?= htmlspecialchars(addslashes($u['full_name'])); ?>')">
+                                <button class="admin-btn-icon danger" title="Delete User" 
+                                    data-id="<?= (int)$u['id']; ?>" 
+                                    data-name="<?= htmlspecialchars($u['full_name'], ENT_QUOTES, 'UTF-8'); ?>" 
+                                    onclick="deleteUser(this.getAttribute('data-id'), this.getAttribute('data-name'))">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </td>

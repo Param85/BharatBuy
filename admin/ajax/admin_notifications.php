@@ -1,12 +1,20 @@
 <?php
 /**
- * Admin AJAX — Notification Actions
+ * Admin AJAX - Notification Actions
  * Handles: clear_user_notifications
  */
 require_once __DIR__ . '/../includes/admin_auth.php';
 requireAdmin();
 
 header('Content-Type: application/json');
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Method not allowed.']);
+    exit;
+}
+
+validate_csrf_or_exit();
 
 $action = $_POST['action'] ?? '';
 
@@ -25,9 +33,11 @@ switch ($action) {
             logAdminAction($pdo, 'Cleared notifications', 'user', $userId);
             echo json_encode(['success' => true, 'message' => 'Notifications cleared for user.']);
         } catch (PDOException $e) {
-            echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+            error_log("admin_notifications error: " . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'An internal database error occurred while clearing notifications.']);
         }
         break;
+
 
     default:
         echo json_encode(['success' => false, 'message' => 'Unknown action.']);

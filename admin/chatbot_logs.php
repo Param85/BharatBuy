@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin — Chatbot Analytics
+ * Admin - Chatbot Analytics
  * Browse chatbot_logs with summary cards.
  */
 require_once __DIR__ . '/includes/admin_auth.php';
@@ -117,7 +117,7 @@ try {
                                 <?php if ($log['error_message']): ?>
                                     <span class="truncate text-danger" style="display:inline-block; max-width: 250px;" title="<?= htmlspecialchars($log['error_message']); ?>"><?= htmlspecialchars($log['error_message']); ?></span>
                                 <?php else: ?>
-                                    <span class="text-muted">—</span>
+                                    <span class="text-muted">-</span>
                                 <?php endif; ?>
                             </td>
                             <td class="text-muted"><?= date('M j, g:i:s A', strtotime($log['created_at'])); ?></td>

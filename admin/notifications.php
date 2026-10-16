@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin — Notification Log
+ * Admin - Notification Log
  * Browse user_notifications with search.
  */
 require_once __DIR__ . '/includes/admin_auth.php';
@@ -77,7 +77,7 @@ try {
                             <td style="font-weight: 600;"><?= htmlspecialchars($n['user_name']); ?></td>
                             <td><span class="admin-badge warning"><?= htmlspecialchars($n['title']); ?></span></td>
                             <td><span class="truncate" style="display:inline-block; max-width: 250px;" title="<?= htmlspecialchars($n['message']); ?>"><?= htmlspecialchars($n['message']); ?></span></td>
-                            <td class="text-muted"><?= $n['product_name'] ? htmlspecialchars($n['product_name']) : '—'; ?></td>
+                            <td class="text-muted"><?= $n['product_name'] ? htmlspecialchars($n['product_name']) : '-'; ?></td>
                             <td class="text-muted"><?= date('M j, g:i A', strtotime($n['created_at'])); ?></td>
                         </tr>
                     <?php endforeach; ?>

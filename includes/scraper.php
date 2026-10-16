@@ -87,77 +87,94 @@ function searchProvidersAndStore($query, $isStrict = true) {
         }
     }
 
-    // Filter out accessory noise and model mismatches
+    // Filter out accessory noise, dummy test data, and obsolete legacy products
     $filteredRaw = [];
-    if (!$isStrict) {
-        $filteredRaw = $rawProducts;
-    } else {
-        // Extract specific model search terms from query to ensure model accuracy
-        $qWords = array_filter(explode(' ', strtolower($searchQuery)));
-        $genericTerms = ['phone', 'mobile', 'smartphone', 'unlocked', '5g', '4g', 'lte', 'gsm', 'dual', 'sim', 'international', 'version', 'model', 'with', 'for'];
-        
-        // Model words are words in search query excluding the first word (usually brand) and generic terms
-        $modelWords = [];
-        if (count($qWords) > 1) {
-            $brand = array_shift($qWords); // remove first word (brand)
-            foreach ($qWords as $word) {
-                $wordClean = preg_replace('/[^\w]/', '', $word);
-                if (strlen($wordClean) >= 2 && !in_array($wordClean, $genericTerms)) {
-                    $modelWords[] = $wordClean;
+    $qLower = strtolower($searchQuery);
+    $qWords = array_values(array_filter(explode(' ', $qLower)));
+
+    // Detect if user specifically asked for an accessory
+    $userWantsAccessory = false;
+    $accessoryTriggers = [
+        'case', 'cover', 'protector', 'charger', 'charging', 'cable', 'cord', 'wire', 
+        'battery', 'lamp', 'light', 'stand', 'holder', 'mount', 'strap', 'adapter', 
+        'dock', 'hub', 'accessory', 'accessories'
+    ];
+    foreach ($accessoryTriggers as $atw) {
+        if (strpos($qLower, $atw) !== false) {
+            $userWantsAccessory = true;
+            break;
+        }
+    }
+
+    $accessoryKeywords = [
+        'case', 'cover', 'protector', 'screen guard', 'tempered glass', 'strap', 'sleeve', 
+        'pouch', 'shell', 'holster', 'lamp', 'light', 'ring light', 'selfie lamp', 'selfie light',
+        'charger', 'charging', 'cable', 'cord', 'wire', 'battery pack', 'power bank', 'magsafe battery',
+        'holder', 'stand', 'mount', 'tripod', 'gimbal', 'adapter', 'dock', 'hub', 'dongle',
+        'cleaner', 'cloth', 'sticker', 'skin', 'decal', 'grip', 'popsocket', 'replacement',
+        'repair', 'spare parts', 'spare', 'parts', 'lens protector', 'camera protector', 'dummy', 'toy'
+    ];
+
+    foreach ($rawProducts as $prod) {
+        $title = strtolower($prod['name'] ?? '');
+        $category = strtolower($prod['category'] ?? '');
+        $isNoise = false;
+
+        // 1. Strict accessory filter when searching for primary device
+        if (!$userWantsAccessory) {
+            if (strpos($category, 'accessor') !== false || strpos($category, 'mobile-accessories') !== false) {
+                $isNoise = true;
+            }
+            if (!$isNoise) {
+                foreach ($accessoryKeywords as $akw) {
+                    if (preg_match('/\b' . preg_quote($akw, '/') . '\b/i', $title)) {
+                        $isNoise = true;
+                        break;
+                    }
                 }
+            }
+            if (!$isNoise && preg_match('/\b(compatible with|compatible for|designed for|for iphone|for samsung|for macbook|for ipad)\b/i', $title)) {
+                $isNoise = true;
             }
         }
 
-        foreach ($rawProducts as $prod) {
-            $q = strtolower($searchQuery);
-            $title = strtolower($prod['name']);
-            $isNoise = false;
-            
-            // 1. Accessory filter
-            $accessoryKeywords = ['case', 'cover', 'protector', 'screen guard', 'tempered glass', 'strap', 'sleeve', 'pouch', 'shell', 'holster'];
-            foreach ($accessoryKeywords as $word) {
-                if (strpos($title, $word) !== false && strpos($q, $word) === false) {
+        // 2. Filter sandbox/dummy/test listings
+        if (!$isNoise && preg_match('/\b(test|sample|dummy|prototype|sealed test)\b/i', $title) && !preg_match('/\b(test|sample)\b/i', $qLower)) {
+            $isNoise = true;
+        }
+
+        // 3. Obsolete smartphone generations (e.g. iPhone 3/4/5/6/7/8 when user only searched general "iphone")
+        if (!$isNoise && $qLower === 'iphone') {
+            if (preg_match('/\biphone\s*(3|4|5|5s|5c|6|6s|6 plus|7|7 plus|8|8 plus)\b/i', $title)) {
+                $isNoise = true;
+            }
+        }
+
+        // 4. Require query keyword relevance in product name
+        if (!$isNoise) {
+            foreach ($qWords as $qw) {
+                if (strlen($qw) >= 3 && strpos($title, $qw) === false && strpos($category, $qw) === false) {
                     $isNoise = true;
                     break;
                 }
             }
-            
-            if (strpos($title, 'compatible with') !== false && strpos($q, 'compatible') === false) {
-                $isNoise = true;
-            }
-            if (strpos($title, 'compatible for') !== false && strpos($q, 'compatible') === false) {
-                $isNoise = true;
-            }
+        }
 
-            // 2. Specific model matching filter
-            if (!$isNoise && !empty($modelWords)) {
-                $hasModelMatch = false;
-                foreach ($modelWords as $mWord) {
-                    if (strpos($title, $mWord) !== false) {
-                        $hasModelMatch = true;
-                        break;
-                    }
-                }
-                if (!$hasModelMatch) {
-                    $isNoise = true; // Discard completely different model search spillover
-                }
-            }
-
-            if (!$isNoise) {
-                $filteredRaw[] = $prod;
-            }
+        if (!$isNoise) {
+            $filteredRaw[] = $prod;
         }
     }
+
     $rawProducts = $filteredRaw;
 
-    // 2. Fallback to MockProvider if all external APIs returned empty sets
-    if (empty($rawProducts)) {
+    // 2. Fallback / Augment with high-fidelity flagship items if filtered set has fewer than 4 items
+    if (count($rawProducts) < 4) {
         try {
             $mock = new MockProvider();
-            $results = $mock->search($searchQuery);
-            if (is_array($results)) {
+            $mockResults = $mock->search($searchQuery);
+            if (is_array($mockResults)) {
                 // Convert USD prices to INR using dynamic rate
-                foreach ($results as &$res) {
+                foreach ($mockResults as &$res) {
                     if (isset($res['current_price'])) {
                         $res['current_price'] = round($res['current_price'] * $exchangeRate, 2);
                     }
@@ -166,22 +183,20 @@ function searchProvidersAndStore($query, $isStrict = true) {
                     }
                 }
                 unset($res);
-                $rawProducts = $results;
+                $rawProducts = array_merge($rawProducts, $mockResults);
             }
         } catch (Exception $e) {
-            error_log("MockProvider fallback failed: " . $e->getMessage());
+            error_log("MockProvider augmentation failed: " . $e->getMessage());
         }
     }
 
     // 3. Deduplicate / Merge products
     $mergedProducts = [];
     foreach ($rawProducts as $product) {
-        // Build a unique duplicate check key based on website, brand, and normalized title
         $cleanName = strtolower(preg_replace('/[^\w]/', '', $product['name']));
         $key = $product['website'] . '_' . strtolower($product['brand']) . '_' . $cleanName;
 
         if (isset($mergedProducts[$key])) {
-            // Merge duplicates by keeping the cheaper deal
             if ($product['current_price'] < $mergedProducts[$key]['current_price']) {
                 $mergedProducts[$key] = $product;
             }
@@ -207,7 +222,7 @@ function searchProvidersAndStore($query, $isStrict = true) {
         }
     }
 
-    // 5. Run Recommendation Scoring (calculated relative to lowest compared price)
+    // 5. Run Recommendation Scoring with Prominence & Quality Weighting
     $prices = array_column($savedProducts, 'current_price');
     $minPrice = $prices ? min($prices) : 1.0;
 
@@ -220,7 +235,20 @@ function searchProvidersAndStore($query, $isStrict = true) {
             (int)$item['discount_rate'],
             (bool)$item['is_out_of_stock']
         );
-        $item['score'] = $score_data['score'];
+        $score = $score_data['score'];
+
+        // Brand & query prominence boost
+        $nameLower = strtolower($item['product_name']);
+        if (strpos($nameLower, $qLower) === 0 || strpos($nameLower, 'apple ' . $qLower) === 0) {
+            $score += 6.0;
+        }
+
+        // High rating & verified review volume boost
+        if ($item['rating'] >= 4.5 && $item['review_count'] >= 100) {
+            $score += 4.0;
+        }
+
+        $item['score'] = min(99.0, max(10.0, round($score, 1)));
         $item['score_reasons'] = $score_data['reasons'];
     }
     unset($item);
@@ -230,7 +258,8 @@ function searchProvidersAndStore($query, $isStrict = true) {
         return $b['score'] <=> $a['score'];
     });
 
-    return $savedProducts;
+    // Curate results: Return top 5 proper products (as requested)
+    return array_slice($savedProducts, 0, 5);
 }
 
 /**
@@ -309,7 +338,7 @@ function saveOrUpdateProduct($product) {
                         $stmtNotif = $pdo->prepare("INSERT INTO user_notifications (user_id, title, message, product_id) VALUES (?, ?, ?, ?)");
                         $stmtNotif->execute([
                             $alert['user_id'],
-                            '🔥 Price Drop Alert!',
+                            'Price Drop Alert',
                             $alert['product_name'] . ' is now down to ₹' . number_format($new_price, 2),
                             $product_id
                         ]);

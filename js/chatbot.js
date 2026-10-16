@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
             font-size: 0.76rem;
             font-weight: 600;
             padding: 4px 10px;
-            border-radius: 12px;
+            border-radius: 6px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -302,9 +302,9 @@ document.addEventListener('DOMContentLoaded', function() {
             <!-- Initial Greeting with TTS -->
             <div class="bot-msg-wrapper" style="display: flex; flex-direction: column; align-self: flex-start; max-width: 85%;">
                 <div style="background: var(--border); color: var(--text); padding: 0.75rem 1rem; border-radius: 4px 12px 12px 12px; font-size: 0.88rem; line-height: 1.4; font-weight: 500;">
-                    Hello! I'm BharatBuy, your Smart Shopping Assistant. Ask me <b>'how it works'</b>, about <b>'recommendations'</b>, or type <b>'help'</b> for tips!
+                    Namaste! I'm BharatBuy, your Smart Shopping Assistant. Ask me <b>'how it works'</b>, about <b>'recommendations'</b>, or type <b>'help'</b> for tips!
                 </div>
-                <button class="chat-tts-btn" title="Read Aloud" data-msg="Hello! I am BharatBuy, your Smart Shopping Assistant. Ask me how it works, about recommendations, or type help for tips!">
+                <button class="chat-tts-btn" title="Read Aloud" data-msg="Namaste! I am BharatBuy, your Smart Shopping Assistant. Ask me how it works, about recommendations, or type help for tips!">
                     <i class="fas fa-volume-high"></i> <span>Listen</span>
                 </button>
             </div>
@@ -338,61 +338,138 @@ document.addEventListener('DOMContentLoaded', function() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognition = null;
     let isListening = false;
+    let finalTranscript = '';
+    let silenceTimer = null;
+    let speechDetected = false;
 
     if (SpeechRecognition) {
         recognition = new SpeechRecognition();
-        recognition.continuous = false;
+        recognition.continuous = true; // Continuous listening so pauses don't cut user off prematurely
         recognition.interimResults = true;
-        recognition.lang = 'en-IN';
-        
+        recognition.maxAlternatives = 1;
+        // Prioritize user's English locale or Indian English
+        recognition.lang = (navigator.language && navigator.language.startsWith('en')) ? navigator.language : 'en-IN';
+
+        function clearSilenceTimer() {
+            if (silenceTimer) {
+                clearTimeout(silenceTimer);
+                silenceTimer = null;
+            }
+        }
+
+        function restartSilenceTimer() {
+            clearSilenceTimer();
+            // Automatically finalize and submit 2 seconds after last spoken word
+            silenceTimer = setTimeout(() => {
+                if (isListening && speechDetected && chatInput.value.trim().length > 0) {
+                    try { recognition.stop(); } catch(e) {}
+                }
+            }, 2000);
+        }
+
         recognition.onstart = function() {
             isListening = true;
+            speechDetected = false;
+            finalTranscript = '';
+            clearSilenceTimer();
             audioBtn.classList.add('listening');
-            audioBtn.innerHTML = '<i class="fas fa-microphone-lines"></i>';
-            audioBtn.title = "Listening... Click to stop";
-            chatInput.placeholder = "Listening... Speak now 🎙️";
+            audioBtn.innerHTML = '<i class="fas fa-microphone-lines fa-beat"></i>';
+            audioBtn.title = "Listening... Speak now (Click to stop)";
+            audioBtn.style.color = '#ef4444';
+            chatInput.placeholder = "Listening... Speak into your microphone...";
         };
 
         recognition.onresult = function(event) {
-            let transcript = '';
-            for (let i = event.resultIndex; i < event.results.length; ++i) {
-                transcript += event.results[i][0].transcript;
+            let interimTranscript = '';
+            for (let i = 0; i < event.results.length; ++i) {
+                const phrase = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    finalTranscript += phrase + ' ';
+                } else {
+                    interimTranscript += phrase;
+                }
             }
-            if (transcript) {
-                chatInput.value = transcript;
-            }
-        };
-
-        recognition.onspeechend = function() {
-            if (recognition) {
-                recognition.stop();
+            const completeText = (finalTranscript + interimTranscript).trim();
+            if (completeText) {
+                chatInput.value = completeText;
+                speechDetected = true;
+                restartSilenceTimer();
             }
         };
 
         recognition.onend = function() {
             isListening = false;
+            clearSilenceTimer();
             audioBtn.classList.remove('listening');
             audioBtn.innerHTML = '<i class="fas fa-microphone"></i>';
             audioBtn.title = "Audio Voice Input";
+            audioBtn.style.color = '';
             chatInput.placeholder = "Type a message or use audio...";
             
             // Auto submit speech if recognized
-            if (chatInput.value.trim().length > 0) {
+            if (chatInput.value.trim().length > 0 && speechDetected) {
                 setTimeout(() => {
                     sendMsg();
-                }, 400);
+                }, 300);
             }
         };
+
+        function showMicrophoneNotice(title, message, isError = false) {
+            const existing = document.getElementById('mic-notice');
+            if (existing) existing.remove();
+
+            const bgColor = isError ? '#fef2f2' : '#f0fdf4';
+            const borderColor = isError ? '#fecaca' : '#bbf7d0';
+            const textColor = isError ? '#991b1b' : '#166534';
+            const iconClass = isError ? 'fa-microphone-slash' : 'fa-info-circle';
+
+            const noticeHtml = `
+                <div id="mic-notice" class="bot-msg-wrapper" style="align-self: center; width: 100%; max-width: 95%; margin: 0.5rem 0;">
+                    <div style="background: ${bgColor}; border: 1px solid ${borderColor}; color: ${textColor}; padding: 0.85rem 1rem; border-radius: 10px; font-size: 0.82rem; line-height: 1.45;">
+                        <div style="font-weight: 700; display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.35rem;">
+                            <i class="fas ${iconClass}"></i> ${title}
+                        </div>
+                        <div>${message}</div>
+                    </div>
+                </div>`;
+            chatLogs.insertAdjacentHTML('beforeend', noticeHtml);
+            chatLogs.scrollTop = chatLogs.scrollHeight;
+        }
 
         recognition.onerror = function(event) {
             console.warn("Audio recognition error:", event.error);
             isListening = false;
+            clearSilenceTimer();
             audioBtn.classList.remove('listening');
             audioBtn.innerHTML = '<i class="fas fa-microphone"></i>';
             audioBtn.title = "Audio Voice Input";
+            audioBtn.style.color = '';
             chatInput.placeholder = "Type a message or use audio...";
-            if (event.error === 'not-allowed') {
-                alert("Microphone access was denied. Please allow microphone permissions in your browser to use the audio voice feature.");
+
+            if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+                showMicrophoneNotice(
+                    'Microphone Access Blocked',
+                    'Your browser blocked microphone access. Click the <b>Lock or Tune icon (🔒 / ⚙️)</b> on the left of your browser address bar, set <b>Microphone</b> to <b>Allow</b>, and refresh the page.',
+                    true
+                );
+            } else if (event.error === 'no-speech') {
+                showMicrophoneNotice(
+                    'No Voice Detected',
+                    'The microphone did not detect any speech. Please make sure your microphone is not muted and speak directly into the mic.',
+                    false
+                );
+            } else if (event.error === 'network') {
+                showMicrophoneNotice(
+                    'Speech Recognition Network Error',
+                    'Google speech service had a connection timeout. Please check your internet connection and try again.',
+                    true
+                );
+            } else if (event.error === 'audio-capture') {
+                showMicrophoneNotice(
+                    'No Microphone Found',
+                    'No working microphone was detected on your system. Please connect a microphone or headset and try again.',
+                    true
+                );
             }
         };
     }
@@ -407,13 +484,27 @@ document.addEventListener('DOMContentLoaded', function() {
         stopSpeaking(); // Stop any bot speech playback when recording user audio
 
         if (isListening) {
-            recognition.stop();
+            try {
+                recognition.stop();
+            } catch (e) {}
         } else {
             try {
+                finalTranscript = '';
+                speechDetected = false;
                 chatInput.value = '';
                 recognition.start();
             } catch (err) {
-                console.error("Audio start error:", err);
+                console.warn("Audio start error, resetting:", err);
+                try {
+                    recognition.abort();
+                    setTimeout(() => {
+                        try { 
+                            finalTranscript = '';
+                            speechDetected = false;
+                            recognition.start(); 
+                        } catch (e) {}
+                    }, 150);
+                } catch (e) {}
             }
         }
     });

@@ -32,8 +32,7 @@ module.exports = {
         "10xl": '1440px'
       },
       fontFamily: {
-        inter: ['Inter', 'sans-serif'],
-        spaceGrotesk: ['Space Grotesk', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         10: "10px"

@@ -91,7 +91,7 @@ class GeminiService {
      * Executes the POST request for a specific model using cURL.
      */
     private function sendPostRequest(string $model, array $payload): string {
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key=" . urlencode($this->apiKey);
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent";
         $jsonData = json_encode($payload);
 
         $ch = curl_init($url);
@@ -103,7 +103,8 @@ class GeminiService {
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json'
+            'Content-Type: application/json',
+            'x-goog-api-key: ' . $this->apiKey
         ]);
         
         // Enforce strict timeouts (10s max total, 5s connection timeout)

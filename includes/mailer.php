@@ -10,12 +10,12 @@ require_once __DIR__ . '/PHPMailer/SMTP.php';
  * Sends a premium HTML email price alert notification to the user.
  */
 function sendPriceAlertEmail($toEmail, $userName, $productName, $oldPrice, $newPrice, $productUrl) {
-    $subject = "🔥 Price Drop Alert: " . $productName;
+    $subject = "Price Drop Alert: " . $productName;
     
     $savings = $oldPrice - $newPrice;
     $savingsPercent = round(($savings / $oldPrice) * 100);
 
-    // Styling email template similar to PriceWise emails
+    // Styling email template with BharatBuy Emerald & Champagne theme
     $message = "
     <html>
     <head>
@@ -24,20 +24,20 @@ function sendPriceAlertEmail($toEmail, $userName, $productName, $oldPrice, $newP
         <link href='https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap' rel='stylesheet'>
         <style>
             body { font-family: 'Outfit', 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f8fafc; padding: 20px; color: #0f172a; margin: 0; }
-            .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-            .header { background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%); color: white; padding: 30px; text-align: center; }
+            .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+            .header { background: linear-gradient(135deg, #06433B 0%, #0A5A50 100%); color: #F8E7C9; padding: 30px; text-align: center; }
             .header h1 { margin: 0; font-size: 24px; font-weight: 800; }
             .content { padding: 30px; }
-            .greeting { font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+            .greeting { font-size: 16px; font-weight: 600; margin-bottom: 10px; color: #0f172a; }
             .intro { font-size: 15px; color: #64748b; line-height: 1.5; margin-bottom: 25px; }
-            .deal-card { background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 25px; }
-            .product-title { font-size: 18px; font-weight: 700; color: #1e3a8a; margin-bottom: 15px; }
+            .deal-card { background-color: #f0fdf9; border: 1px solid #ccfbf1; border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 25px; }
+            .product-title { font-size: 18px; font-weight: 700; color: #06433B; margin-bottom: 15px; }
             .price-comparison { display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 10px; text-align: center; }
             .price-old { font-size: 18px; text-decoration: line-through; color: #94a3b8; font-weight: 600; margin-right: 15px; }
-            .price-new { font-size: 28px; color: #10b981; font-weight: 800; }
-            .savings-badge { display: inline-block; background-color: #10b981; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-top: 10px; }
-            .btn { display: inline-block; background-color: #4f46e5; color: white; text-decoration: none; padding: 12px 30px; border-radius: 8px; font-weight: 700; font-size: 15px; margin-top: 15px; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2); }
-            .footer { background-color: #f1f5f9; padding: 20px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0; }
+            .price-new { font-size: 28px; color: #06433B; font-weight: 800; }
+            .savings-badge { display: inline-block; background-color: #06433B; color: #F8E7C9; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; margin-top: 10px; }
+            .btn { display: inline-block; background-color: #06433B; color: #F8E7C9; text-decoration: none; padding: 12px 30px; border-radius: 8px; font-weight: 700; font-size: 15px; margin-top: 15px; box-shadow: 0 4px 10px rgba(6, 67, 59, 0.2); }
+            .footer { background-color: #f8fafc; padding: 20px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0; }
         </style>
     </head>
     <body>
@@ -69,8 +69,10 @@ function sendPriceAlertEmail($toEmail, $userName, $productName, $oldPrice, $newP
     </html>
     ";
 
-    // Save a copy of the HTML email to the project root for local testing/preview
-    file_put_contents(__DIR__ . '/../mail_preview.html', $message);
+    // Only write email preview if explicitly enabled in local debugging
+    if (defined('APP_DEBUG') && APP_DEBUG === true && defined('ENABLE_EMAIL_PREVIEW') && ENABLE_EMAIL_PREVIEW === true) {
+        @file_put_contents(__DIR__ . '/../mail_preview.html', $message);
+    }
 
     $smtpHost = $_ENV['SMTP_HOST'] ?? $_SERVER['SMTP_HOST'] ?? getenv('SMTP_HOST');
     $smtpUser = $_ENV['SMTP_USER'] ?? $_SERVER['SMTP_USER'] ?? getenv('SMTP_USER');

@@ -1,8 +1,17 @@
 <?php
 require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/session.php';
+
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'error' => 'Method not allowed.']);
+    exit;
+}
+
+if (!isLoggedIn()) {
+    http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'Unauthorized access.']);
     exit;
 }
@@ -20,6 +29,17 @@ if ($data) {
         echo json_encode(['success' => false, 'error' => 'Invalid product details.']);
         exit;
     }
+
+    if (!is_safe_url($url) || !is_safe_url($img)) {
+        echo json_encode(['success' => false, 'error' => 'Invalid product link or image address.']);
+        exit;
+    }
+
+    if (strlen($name) > 300 || strlen($site) > 100 || strlen($img) > 2000 || strlen($url) > 2000) {
+        echo json_encode(['success' => false, 'error' => 'Product detail exceeds maximum allowable length.']);
+        exit;
+    }
+
 
     // Prevent duplicate entries
     $check = $pdo->prepare("SELECT id FROM wishlist WHERE user_id = ? AND product_name = ? AND website = ?");

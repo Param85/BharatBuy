@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin — Activity Audit Log
+ * Admin - Activity Audit Log
  * Read-only log of all admin actions.
  */
 require_once __DIR__ . '/includes/admin_auth.php';
@@ -63,15 +63,15 @@ try {
                                 <?php if ($log['target_type']): ?>
                                     <span class="admin-badge neutral"><?= htmlspecialchars($log['target_type']); ?></span>
                                 <?php else: ?>
-                                    <span class="text-muted">—</span>
+                                    <span class="text-muted">-</span>
                                 <?php endif; ?>
                             </td>
-                            <td><?= $log['target_id'] ? '#' . $log['target_id'] : '—'; ?></td>
+                            <td><?= $log['target_id'] ? '#' . $log['target_id'] : '-'; ?></td>
                             <td>
                                 <?php if ($log['details']): ?>
                                     <span class="truncate" style="display:inline-block; max-width: 200px;" title="<?= htmlspecialchars($log['details']); ?>"><?= htmlspecialchars($log['details']); ?></span>
                                 <?php else: ?>
-                                    <span class="text-muted">—</span>
+                                    <span class="text-muted">-</span>
                                 <?php endif; ?>
                             </td>
                             <td class="text-muted"><?= date('M j, g:i:s A', strtotime($log['created_at'])); ?></td>

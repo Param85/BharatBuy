@@ -6,12 +6,15 @@ header('Content-Type: application/json');
 
 // This check-alerts cron script can run in background without session if called via CLI or secured webhook
 $is_cli = (php_sapi_name() === 'cli');
-$secret_token = 'smart_shop_cron_secure_token_abc123';
+$secret_token = defined('CRON_SECRET_KEY') ? CRON_SECRET_KEY : 'bharatbuy_cron_sec_87e2b8310';
+$provided_token = (string)($_GET['token'] ?? $_SERVER['HTTP_X_CRON_TOKEN'] ?? '');
 
-if (!$is_cli && ($_GET['token'] ?? '') !== $secret_token) {
+if (!$is_cli && (empty($provided_token) || !hash_equals($secret_token, $provided_token))) {
+    http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'Unauthorized access.']);
     exit;
 }
+
 
 try {
     // Select active alerts where the current price is less than or equal to target_price, and alerts are enabled by the user
@@ -42,7 +45,7 @@ try {
         $stmtNotif = $pdo->prepare("INSERT INTO user_notifications (user_id, title, message, product_id) VALUES (?, ?, ?, ?)");
         $stmtNotif->execute([
             $alert['user_id'],
-            '🔥 Price Drop Alert!',
+            'Price Drop Alert',
             $alert['product_name'] . ' is now down to ₹' . number_format($alert['current_price'], 2),
             $alert['product_id']
         ]);
@@ -60,8 +63,10 @@ try {
         'sent_count' => $sent_count
     ]);
 } catch (Exception $e) {
+    error_log("check-alerts cron error: " . $e->getMessage());
     echo json_encode([
         'success' => false,
-        'error' => $e->getMessage()
+        'error' => 'An internal error occurred while processing alerts.'
     ]);
 }
+

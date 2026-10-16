@@ -1,5 +1,5 @@
 /**
- * BharatBuy Admin Panel — Shared JavaScript
+ * BharatBuy Admin Panel - Shared JavaScript
  */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -113,14 +113,23 @@ function showAdminToast(message, type = 'success') {
 // ── AJAX Helper ──
 async function adminFetch(url, data = {}) {
     const formData = new FormData();
+    const metaToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if (metaToken && !data.csrf_token) {
+        formData.append('csrf_token', metaToken);
+    }
     for (const key in data) {
         formData.append(key, data[key]);
     }
 
     try {
+        const headers = { 'X-Requested-With': 'XMLHttpRequest' };
+        if (metaToken) {
+            headers['X-CSRF-Token'] = metaToken;
+        }
         const response = await fetch(url, {
             method: 'POST',
-            body: formData
+            body: formData,
+            headers: headers
         });
         return await response.json();
     } catch (err) {

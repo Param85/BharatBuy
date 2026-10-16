@@ -18,20 +18,25 @@ if (!$product) {
     exit;
 }
 
-// Handle Track / Untrack Price Alerts
+// Handle Track / Untrack Price Alerts (Protected by CSRF verification)
 $message = '';
 if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    if ($_POST['action'] === 'track') {
-        $target_price = (float)$_POST['target_price'];
-        if ($target_price > 0) {
-            $stmt = $pdo->prepare("INSERT INTO product_trackers (user_id, product_id, target_price) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE target_price = ?, is_active = 1");
-            $stmt->execute([$_SESSION['user_id'], $product_id, $target_price, $target_price]);
-            $message = '<div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> Price alert saved successfully! We will notify you at ' . htmlspecialchars($_SESSION['email'] ?? 'your email') . ' when the price drops.</div>';
+    if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
+        $message = '<div class="alert alert-error"><i class="fa-solid fa-circle-exclamation"></i> Security verification failed. Please refresh and try again.</div>';
+    } else {
+        if ($_POST['action'] === 'track') {
+            $target_price = (float)($_POST['target_price'] ?? 0);
+            if ($target_price > 0) {
+                $stmt = $pdo->prepare("INSERT INTO product_trackers (user_id, product_id, target_price) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE target_price = ?, is_active = 1");
+                $stmt->execute([$_SESSION['user_id'], $product_id, $target_price, $target_price]);
+                $notifyEmail = $_SESSION['user_email'] ?? $_SESSION['email'] ?? 'your registered email';
+                $message = '<div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> Price alert saved successfully! We will notify you at ' . htmlspecialchars($notifyEmail) . ' when the price drops.</div>';
+            }
+        } elseif ($_POST['action'] === 'untrack') {
+            $stmt = $pdo->prepare("DELETE FROM product_trackers WHERE user_id = ? AND product_id = ?");
+            $stmt->execute([$_SESSION['user_id'], $product_id]);
+            $message = '<div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> Price alert cancelled.</div>';
         }
-    } elseif ($_POST['action'] === 'untrack') {
-        $stmt = $pdo->prepare("DELETE FROM product_trackers WHERE user_id = ? AND product_id = ?");
-        $stmt->execute([$_SESSION['user_id'], $product_id]);
-        $message = '<div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> Price alert cancelled.</div>';
     }
 }
 
@@ -100,7 +105,7 @@ $similar_products = getSimilarProducts($product_id, $product['category']);
     <div class="details-layout" style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 4rem;">
         
         <!-- Left: Product Image -->
-        <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); position: relative; height: fit-content;">
+        <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); position: relative; height: fit-content;">
             <img src="<?php echo htmlspecialchars($product['image_url']); ?>" alt="<?php echo htmlspecialchars($product['product_name']); ?>" style="max-width: 100%; max-height: 400px; object-fit: contain; border-radius: 12px;" onerror="this.onerror=null; this.src='https://placehold.co/500x500/f5f5f7/1d1d1f?text=Product';">
             <span class="site-badge <?php echo 'badge-' . strtolower($product['website']); ?>"><?php echo htmlspecialchars($product['website']); ?></span>
         </div>
@@ -156,7 +161,7 @@ $similar_products = getSimilarProducts($product_id, $product['category']);
             </div>
 
             <!-- Price Alert Tracker Box -->
-            <div style="background: linear-gradient(135deg, var(--primary-light) 0%, var(--card-bg) 100%); border: 1px solid var(--champagne-border, #E8CD9E); padding: 2rem; border-radius: 20px; display: flex; flex-direction: column; gap: 1rem;">
+            <div style="background: linear-gradient(135deg, var(--primary-light) 0%, var(--card-bg) 100%); border: 1px solid var(--champagne-border, #E8CD9E); padding: 1.75rem; border-radius: 12px; display: flex; flex-direction: column; gap: 1rem;">
                 <h3 style="font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--primary);"><i class="fa-solid fa-bell" style="margin-right: 0.5rem;"></i> Track Price Alerts</h3>
                 <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin: 0;">We'll monitor this product and send you an instant email alert when the price drops below your target price.</p>
                 
@@ -167,12 +172,14 @@ $similar_products = getSimilarProducts($product_id, $product['category']);
                             <span style="font-weight: 700; color: var(--text); font-size: 1.15rem;" data-price-inr="<?php echo $tracking_price; ?>"><script>document.write(formatCurrency(<?php echo $tracking_price; ?>));</script><noscript>₹<?php echo number_format($tracking_price, 2); ?></noscript></span>
                         </div>
                         <form method="POST">
+                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
                             <input type="hidden" name="action" value="untrack">
                             <button type="submit" class="btn btn-outline" style="color: var(--error); border-color: var(--error); padding: 0.5rem 1rem; font-size: 0.85rem;"><i class="fa-solid fa-bell-slash"></i> Cancel Alert</button>
                         </form>
                     </div>
                 <?php else: ?>
                     <form method="POST" style="display: flex; gap: 0.5rem; align-items: center; width: 100%;">
+                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
                         <input type="hidden" name="action" value="track">
                         <div style="position: relative; flex: 1;">
                             <span id="alert-currency-prefix" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--text-muted);">₹</span>
@@ -205,9 +212,10 @@ $similar_products = getSimilarProducts($product_id, $product['category']);
                 </div>
             <?php endif; ?>
 
-            <!-- Buy Button & Wishlist -->
+            <!-- Buy Button & Outbound Store Link -->
             <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                <a href="<?php echo htmlspecialchars($product['product_url']); ?>" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="flex: 2; padding: 1rem; justify-content: center; font-size: 1.1rem;">
+                <?php $safeDealUrl = is_safe_url($product['product_url']) ? $product['product_url'] : '#'; ?>
+                <a href="<?php echo htmlspecialchars($safeDealUrl); ?>" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="flex: 2; padding: 1rem; justify-content: center; font-size: 1.1rem;">
                     Go to Deal Store <i class="fa-solid fa-up-right-from-square"></i>
                 </a>
             </div>
@@ -256,7 +264,7 @@ $similar_products = getSimilarProducts($product_id, $product['category']);
         </div>
 
         <!-- Chart.js line chart card -->
-        <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; box-shadow: var(--shadow);">
+        <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; box-shadow: var(--shadow);">
             <h3 style="font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.15rem; margin-bottom: 1.5rem; color: var(--text);">Historical Price Variation Timeline</h3>
             <div style="width: 100%; height: 350px;">
                 <canvas id="priceHistoryChart"></canvas>
@@ -265,7 +273,7 @@ $similar_products = getSimilarProducts($product_id, $product['category']);
     </div>
 
     <!-- Description Details -->
-    <div style="margin-bottom: 4rem; background: var(--card-bg); border: 1px solid var(--border); padding: 2.5rem; border-radius: 20px; box-shadow: var(--shadow);">
+    <div style="margin-bottom: 4rem; background: var(--card-bg); border: 1px solid var(--border); padding: 2rem; border-radius: 12px; box-shadow: var(--shadow);">
         <h2 style="font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.5rem; margin-bottom: 1rem; color: var(--text);">Product Overview</h2>
         <p style="color: var(--text-muted); line-height: 1.7; font-size: 1rem; white-space: pre-line;"><?php echo htmlspecialchars($product['description']); ?></p>
     </div>

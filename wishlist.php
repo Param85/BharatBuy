@@ -7,8 +7,16 @@ redirectIfLoggedOut();
 $pdo->exec("UPDATE wishlist SET image_url = 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=500&q=80' WHERE image_url LIKE '%photo-1521572267360-ee0c2909d518%'");
 $pdo->exec("UPDATE product_prices SET image_url = 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=500&q=80' WHERE image_url LIKE '%photo-1521572267360-ee0c2909d518%'");
 
-// Delete Item Logic (using safe casting & verification)
-if (isset($_GET['delete'])) {
+// Delete Item Logic (protected with CSRF verification & ownership check)
+if (isset($_POST['delete_id'])) {
+    if (verify_csrf_token($_POST['csrf_token'] ?? null)) {
+        $delete_id = (int)$_POST['delete_id'];
+        $stmt = $pdo->prepare("DELETE FROM wishlist WHERE id = ? AND user_id = ?");
+        $stmt->execute([$delete_id, $_SESSION['user_id']]);
+    }
+    header("Location: wishlist.php");
+    exit;
+} elseif (isset($_GET['delete']) && verify_csrf_token($_GET['token'] ?? null)) {
     $delete_id = (int)$_GET['delete'];
     $stmt = $pdo->prepare("DELETE FROM wishlist WHERE id = ? AND user_id = ?");
     $stmt->execute([$delete_id, $_SESSION['user_id']]);
@@ -96,17 +104,22 @@ $items = $stmt->fetchAll();
                     <h3><?php echo htmlspecialchars($item['product_name']); ?></h3>
                     <div class="price-tag" data-price-inr="<?php echo $item['current_price']; ?>"><script>document.write(formatCurrency(<?php echo $item['current_price']; ?>));</script><noscript>₹<?php echo number_format($item['current_price'], 2); ?></noscript></div>
                     <div style="margin-top: auto; display: flex; gap: 0.5rem; width: 100%;">
-                        <a href="<?php echo htmlspecialchars($item['product_url']); ?>" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="flex: 1; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
+                        <?php $safeProductUrl = is_safe_url($item['product_url']) ? $item['product_url'] : '#'; ?>
+                        <a href="<?php echo htmlspecialchars($safeProductUrl); ?>" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="flex: 1; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
                             Buy Now <i class="fa-solid fa-up-right-from-square" style="font-size: 0.8rem;"></i>
                         </a>
                         <?php if ($item['product_id']): ?>
-                            <a href="product-details.php?id=<?php echo $item['product_id']; ?>" class="btn btn-outline" style="color: var(--primary); border-color: var(--primary); display: flex; align-items: center; justify-content: center; width: 44px; padding: 0; transition: all 0.2s;" onmouseenter="this.style.background='var(--primary-light)'" onmouseleave="this.style.background='white'" title="Set Price Alert">
+                            <a href="product-details.php?id=<?php echo (int)$item['product_id']; ?>" class="btn btn-outline" style="color: var(--primary); border-color: var(--primary); display: flex; align-items: center; justify-content: center; width: 44px; padding: 0; transition: all 0.2s;" onmouseenter="this.style.background='var(--primary-light)'" onmouseleave="this.style.background='white'" title="Set Price Alert">
                                 <i class="fa-solid fa-bell"></i>
                             </a>
                         <?php endif; ?>
-                        <a href="wishlist.php?delete=<?php echo $item['id']; ?>" class="btn btn-outline" style="color: var(--error); border-color: var(--error); display: flex; align-items: center; justify-content: center; width: 44px; padding: 0; transition: all 0.2s;" onmouseenter="this.style.background='var(--error-light)'" onmouseleave="this.style.background='white'" title="Remove Item">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </a>
+                        <form method="POST" action="wishlist.php" style="margin: 0; display: inline-flex;">
+                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
+                            <input type="hidden" name="delete_id" value="<?php echo (int)$item['id']; ?>">
+                            <button type="submit" class="btn btn-outline" style="color: var(--error); border-color: var(--error); display: flex; align-items: center; justify-content: center; width: 44px; height: 100%; padding: 0; transition: all 0.2s; cursor: pointer; background: transparent;" onmouseenter="this.style.background='var(--error-light)'" onmouseleave="this.style.background='transparent'" title="Remove Item">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
             <?php endforeach; ?>

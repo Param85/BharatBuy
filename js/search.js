@@ -67,34 +67,58 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
 
-                    // Safely escape names for HTML/JS event calls
-                    const safeName = item.name.replace(/'/g, "\\'");
-                    const safeImg = item.img.replace(/'/g, "\\'");
-                    const safeUrl = item.url.replace(/'/g, "\\'");
+                    function escapeHTML(str) {
+                        if (str === null || str === undefined) return '';
+                        return String(str)
+                            .replace(/&/g, '&amp;')
+                            .replace(/</g, '&lt;')
+                            .replace(/>/g, '&gt;')
+                            .replace(/"/g, '&quot;')
+                            .replace(/'/g, '&#039;');
+                    }
+
+                    function sanitizeUrl(url) {
+                        if (!url) return '#';
+                        const trimmed = String(url).trim();
+                        if (/^(javascript|data|vbscript|file):/i.test(trimmed)) {
+                            return '#';
+                        }
+                        return trimmed;
+                    }
+
+                    const safeName = escapeHTML(item.name);
+                    const safeSite = escapeHTML(item.site);
+                    const safeSiteClass = escapeHTML(String(item.site).toLowerCase().replace(/[^a-z0-9]/g, ''));
+                    const safeImg = escapeHTML(sanitizeUrl(item.img));
+                    const safeUrl = escapeHTML(sanitizeUrl(item.url));
+                    const safePrice = Number(item.price) || 0;
+                    const safeScore = Number(item.score) || 0;
+                    const safeReviews = Number(item.reviews) || 0;
+                    const safeId = encodeURIComponent(item.id || '');
 
                     const card = `
                         <div class="product-card">
                             ${isBest ? '<div class="recommendation-badge"><i class="fa-solid fa-circle-check"></i> BEST OVERALL</div>' : ''}
-                            <span class="site-badge badge-${item.site.toLowerCase()}">${item.site}</span>
+                            <span class="site-badge badge-${safeSiteClass}">${safeSite}</span>
                             <div style="width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; background: white; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 1rem; padding: 0.5rem; overflow: hidden;">
-                                <img src="${item.img}" alt="${item.name}" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px;" onerror="this.onerror=null; this.src='https://placehold.co/500x500/f5f5f7/1d1d1f?text=Product';">
+                                <img src="${safeImg}" alt="${safeName}" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px;" onerror="this.onerror=null; this.src='https://placehold.co/500x500/f5f5f7/1d1d1f?text=Product';">
                             </div>
-                            <small>${item.site}</small>
-                            <h3>${item.name}</h3>
-                            <div class="price-tag" data-price-inr="${item.price}">${formatCurrency(item.price)}</div>
+                            <small>${safeSite}</small>
+                            <h3>${safeName}</h3>
+                            <div class="price-tag" data-price-inr="${safePrice}">${formatCurrency(safePrice)}</div>
                             <div class="rating-stars">
                                 <span>${starsHtml}</span>
-                                <small>(${item.reviews} reviews)</small>
+                                <small>(${safeReviews} reviews)</small>
                             </div>
-                            <div class="score-circle"><i class="fa-solid fa-bolt"></i> Value Score: ${item.score}/100</div>
+                            <div class="score-circle"><i class="fa-solid fa-bolt"></i> Value Score: ${safeScore}/100</div>
                             <div style="margin-top: 1.5rem; display: flex; gap: 0.5rem; width: 100%;">
-                                <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="flex: 1.2; text-align: center; font-size: 0.85rem; padding: 0.6rem 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
+                                <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="flex: 1.2; text-align: center; font-size: 0.85rem; padding: 0.6rem 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
                                     Buy Deal <i class="fa-solid fa-up-right-from-square" style="font-size: 0.75rem;"></i>
                                 </a>
-                                <a href="product-details.php?id=${item.id}" class="btn btn-outline" style="flex: 1; text-align: center; font-size: 0.85rem; padding: 0.6rem 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
+                                <a href="product-details.php?id=${safeId}" class="btn btn-outline" style="flex: 1; text-align: center; font-size: 0.85rem; padding: 0.6rem 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
                                     Details <i class="fa-solid fa-chart-line" style="font-size: 0.75rem;"></i>
                                 </a>
-                                <button onclick="saveToWishlist('${safeName}', '${item.site}', ${item.price}, '${safeImg}', '${safeUrl}')" class="btn btn-outline" title="Save to Wishlist" style="display: flex; align-items: center; justify-content: center; width: 40px; padding: 0;">
+                                <button type="button" onclick="handleWishlistClick(this)" data-name="${safeName}" data-site="${safeSite}" data-price="${safePrice}" data-img="${safeImg}" data-url="${safeUrl}" class="btn btn-outline" title="Save to Wishlist" style="display: flex; align-items: center; justify-content: center; width: 40px; padding: 0;">
                                     <i class="fa-regular fa-heart" style="font-size: 1rem;"></i>
                                 </button>
                             </div>
@@ -111,20 +135,49 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-function saveToWishlist(name, site, price, img, url) {
-    const btn = event.currentTarget;
-    const icon = btn.querySelector('i');
+function handleWishlistClick(btn) {
+    if (!btn) return;
+    const name = btn.getAttribute('data-name') || '';
+    const site = btn.getAttribute('data-site') || '';
+    const price = parseFloat(btn.getAttribute('data-price')) || 0;
+    const img = btn.getAttribute('data-img') || '';
+    const url = btn.getAttribute('data-url') || '';
+    saveToWishlist(btn, name, site, price, img, url);
+}
 
-    // Animate icon immediately
-    icon.classList.remove('fa-regular', 'fa-heart');
-    icon.classList.add('fa-solid', 'fa-heart', 'fa-beat');
-    btn.style.color = '#ef4444';
-    btn.style.borderColor = '#ef4444';
+function saveToWishlist(btnOrName, site, price, img, url) {
+    let btn, nameVal, siteVal, priceVal, imgVal, urlVal;
+    if (typeof btnOrName === 'object' && btnOrName !== null && btnOrName.nodeType) {
+        btn = btnOrName;
+        nameVal = site;
+        siteVal = price;
+        priceVal = img;
+        imgVal = url;
+        urlVal = arguments[5] || '';
+    } else {
+        btn = (typeof event !== 'undefined' && event && event.currentTarget) ? event.currentTarget : document.activeElement;
+        nameVal = btnOrName;
+        siteVal = site;
+        priceVal = price;
+        imgVal = img;
+        urlVal = url;
+    }
+
+    const icon = btn ? btn.querySelector('i') : null;
+
+    if (icon) {
+        icon.classList.remove('fa-regular', 'fa-heart');
+        icon.classList.add('fa-solid', 'fa-heart', 'fa-beat');
+    }
+    if (btn) {
+        btn.style.color = '#ef4444';
+        btn.style.borderColor = '#ef4444';
+    }
 
     fetch('ajax/wishlist.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, site, price, img, url })
+        body: JSON.stringify({ name: nameVal, site: siteVal, price: priceVal, img: imgVal, url: urlVal })
     })
         .then(res => {
             if (!res.ok) {
@@ -133,26 +186,31 @@ function saveToWishlist(name, site, price, img, url) {
             return res.json();
         })
         .then(data => {
-            icon.classList.remove('fa-beat');
+            if (icon) icon.classList.remove('fa-beat');
             if (data.success) {
-                // Success alert (non-blocking notification styling is cleaner but standard alert is fine)
-                // Show alert or clean notification
                 alert('Product added to your wishlist!');
             } else {
-                // Revert animation if failed
-                icon.classList.remove('fa-solid', 'fa-heart');
-                icon.classList.add('fa-regular', 'fa-heart');
-                btn.style.color = '';
-                btn.style.borderColor = '';
+                if (icon) {
+                    icon.classList.remove('fa-solid', 'fa-heart');
+                    icon.classList.add('fa-regular', 'fa-heart');
+                }
+                if (btn) {
+                    btn.style.color = '';
+                    btn.style.borderColor = '';
+                }
                 alert(data.error || 'Failed to save to wishlist.');
             }
         })
         .catch(err => {
-            icon.classList.remove('fa-beat');
-            icon.classList.remove('fa-solid', 'fa-heart');
-            icon.classList.add('fa-regular', 'fa-heart');
-            btn.style.color = '';
-            btn.style.borderColor = '';
+            if (icon) {
+                icon.classList.remove('fa-beat');
+                icon.classList.remove('fa-solid', 'fa-heart');
+                icon.classList.add('fa-regular', 'fa-heart');
+            }
+            if (btn) {
+                btn.style.color = '';
+                btn.style.borderColor = '';
+            }
             console.error(err);
             alert('Failed to save product to wishlist.');
         });

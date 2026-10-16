@@ -4,9 +4,9 @@
    ========================================================================== */
 
 .dashboard-hero { 
-    padding: 5rem 5%; 
-    background: radial-gradient(circle at 80% 20%, rgba(248, 231, 201, 0.35) 0%, rgba(6, 67, 59, 0.05) 60%, var(--bg) 100%); 
-    border-bottom: 1px solid var(--champagne-border); 
+    padding: 4.5rem 5% 4rem; 
+    background: var(--bg); 
+    border-bottom: 1px solid var(--border); 
 }
 
 .dashboard-hero h1 {
@@ -34,7 +34,7 @@
     flex: 1; 
     padding: 1.1rem 1.75rem; 
     border: 2px solid var(--border); 
-    border-radius: 14px; 
+    border-radius: var(--radius-sm, 10px); 
     font-size: 1.05rem; 
     font-family: inherit;
     outline: none; 
@@ -60,7 +60,7 @@
     gap: 0.5rem;
     padding: 1.1rem 2.25rem;
     font-size: 1.05rem;
-    border-radius: 14px;
+    border-radius: var(--radius-sm, 10px);
 }
 
 .results-grid { 
@@ -74,10 +74,10 @@
 
 .product-card { 
     background: var(--card-bg); 
-    border-radius: 20px; 
+    border-radius: var(--radius-md, 16px); 
     border: 1px solid var(--border); 
     padding: 2.25rem 1.75rem 1.75rem 1.75rem; 
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
     position: relative; 
     display: flex;
     flex-direction: column;
@@ -85,8 +85,8 @@
 }
 
 .product-card:hover { 
-    transform: translateY(-8px); 
-    box-shadow: 0 14px 30px rgba(6, 67, 59, 0.12), 0 0 0 2px var(--champagne-glow); 
+    transform: translateY(-3px); 
+    box-shadow: 0 8px 20px rgba(6, 67, 59, 0.1), 0 0 0 1px var(--champagne-glow); 
     border-color: #06433B;
 }
 
@@ -122,11 +122,11 @@
     position: absolute; 
     top: -14px; 
     left: 20px; 
-    background: linear-gradient(135deg, #06433B 0%, #0A5A50 100%); 
+    background: #06433B; 
     color: #F8E7C9; 
     border: 1px solid #E8CD9E;
-    padding: 0.45rem 1.25rem; 
-    border-radius: 20px; 
+    padding: 0.35rem 0.95rem; 
+    border-radius: 6px; 
     font-size: 0.75rem; 
     font-weight: 700;
     box-shadow: 0 4px 12px rgba(6, 67, 59, 0.25);
@@ -136,7 +136,7 @@
 }
 
 [data-theme="dark"] .recommendation-badge {
-    background: linear-gradient(135deg, #F8E7C9 0%, #E8CD9E 100%);
+    background: #F8E7C9;
     color: #06433B;
     border-color: #F8E7C9;
 }
@@ -146,8 +146,8 @@
     position: absolute; 
     top: 20px; 
     right: 20px; 
-    padding: 0.35rem 1.1rem; 
-    border-radius: 20px; 
+    padding: 0.3rem 0.85rem; 
+    border-radius: 6px; 
     font-weight: 750; 
     color: white; 
     font-size: 0.75rem; 
@@ -156,10 +156,10 @@
     box-shadow: var(--shadow);
 }
 .badge-amazon {
-    background: linear-gradient(135deg, #FF9900 0%, #FF8800 100%);
+    background: #FF9900;
 }
 .badge-ebay {
-    background: linear-gradient(135deg, #0064D2 0%, #004BA0 100%);
+    background: #0064D2;
 }
 
 .price-tag { 

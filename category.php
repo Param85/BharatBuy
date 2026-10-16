@@ -1026,8 +1026,8 @@ if (empty($displayProducts) && empty($searchQuery) && ($subcatFilter === 'All' |
                                 <span>Compare &amp; Buy</span>
                                 <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.8rem;"></i>
                             </a>
-                            <a href="dashboard.php?q=<?= urlencode($p['product_name']); ?>" class="cat-btn-secondary" title="Search all stores on Dashboard">
-                                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                            <a href="dashboard.php?q=<?= urlencode($p['product_name']); ?>" class="cat-btn-secondary" title="Compare across stores on Dashboard" aria-label="Compare <?= htmlspecialchars($p['product_name']); ?> across stores on Dashboard">
+                                <i class="fa-solid fa-magnifying-glass"></i>
                             </a>
                         </div>
                     </div>

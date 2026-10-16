@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin — Chatbot FAQ Manager
+ * Admin - Chatbot FAQ Manager
  * Full CRUD for the chatbot table.
  */
 require_once __DIR__ . '/includes/admin_auth.php';
@@ -48,10 +48,17 @@ try {
                             <td><span class="admin-badge primary"><?= htmlspecialchars($faq['keyword']); ?></span></td>
                             <td><span class="truncate" style="display:inline-block; max-width: 400px;" title="<?= htmlspecialchars($faq['answer']); ?>"><?= htmlspecialchars($faq['answer']); ?></span></td>
                             <td style="white-space: nowrap;">
-                                <button class="admin-btn-icon" title="Edit" onclick="openFaqModal(<?= $faq['id']; ?>, '<?= htmlspecialchars(addslashes($faq['keyword'])); ?>', `<?= htmlspecialchars(addslashes($faq['answer'])); ?>`)">
+                                <button class="admin-btn-icon" title="Edit" 
+                                    data-id="<?= (int)$faq['id']; ?>" 
+                                    data-keyword="<?= htmlspecialchars($faq['keyword'], ENT_QUOTES, 'UTF-8'); ?>" 
+                                    data-answer="<?= htmlspecialchars($faq['answer'], ENT_QUOTES, 'UTF-8'); ?>" 
+                                    onclick="openFaqModalFromBtn(this)">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
-                                <button class="admin-btn-icon danger" title="Delete" onclick="deleteFaq(<?= $faq['id']; ?>, '<?= htmlspecialchars(addslashes($faq['keyword'])); ?>')">
+                                <button class="admin-btn-icon danger" title="Delete" 
+                                    data-id="<?= (int)$faq['id']; ?>" 
+                                    data-keyword="<?= htmlspecialchars($faq['keyword'], ENT_QUOTES, 'UTF-8'); ?>" 
+                                    onclick="deleteFaqFromBtn(this)">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </td>
@@ -91,6 +98,19 @@ try {
 </div>
 
 <script>
+function openFaqModalFromBtn(btn) {
+    const id = btn.getAttribute('data-id');
+    const keyword = btn.getAttribute('data-keyword') || '';
+    const answer = btn.getAttribute('data-answer') || '';
+    openFaqModal(id, keyword, answer);
+}
+
+function deleteFaqFromBtn(btn) {
+    const id = btn.getAttribute('data-id');
+    const keyword = btn.getAttribute('data-keyword') || '';
+    deleteFaq(id, keyword);
+}
+
 function openFaqModal(id = null, keyword = '', answer = '') {
     document.getElementById('faqEditId').value = id || '';
     document.getElementById('faqKeyword').value = keyword;

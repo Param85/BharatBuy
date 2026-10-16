@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin — Price Tracker Overview
+ * Admin - Price Tracker Overview
  * Browse all product_trackers joined with users and products.
  */
 require_once __DIR__ . '/includes/admin_auth.php';
@@ -103,7 +103,7 @@ try {
                                         <i class="fa-solid fa-power-off"></i>
                                     </button>
                                 <?php else: ?>
-                                    <span class="text-muted">—</span>
+                                    <span class="text-muted">-</span>
                                 <?php endif; ?>
                             </td>
                         </tr>
