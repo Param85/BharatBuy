@@ -7,47 +7,45 @@ require_once __DIR__ . '/PHPMailer/PHPMailer.php';
 require_once __DIR__ . '/PHPMailer/SMTP.php';
 
 /**
- * Sends a premium HTML email price alert notification to the user.
+ * Generates the responsive HTML email markup for price drop alerts.
  */
-function sendPriceAlertEmail($toEmail, $userName, $productName, $oldPrice, $newPrice, $productUrl) {
-    $subject = "Price Drop Alert: " . $productName;
-    
+function getPriceAlertEmailHtml($userName, $productName, $oldPrice, $newPrice, $productUrl) {
     $savings = $oldPrice - $newPrice;
-    $savingsPercent = round(($savings / $oldPrice) * 100);
+    $savingsPercent = ($oldPrice > 0) ? round(($savings / $oldPrice) * 100) : 0;
 
-    // Styling email template with BharatBuy Emerald & Champagne theme
-    $message = "
+    return "
     <html>
     <head>
         <meta charset='UTF-8'>
-        <title>Price Drop Alert</title>
-        <link href='https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap' rel='stylesheet'>
+        <title>Price Drop Alert - BharatBuy</title>
+        <link href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap' rel='stylesheet'>
         <style>
-            body { font-family: 'Outfit', 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f8fafc; padding: 20px; color: #0f172a; margin: 0; }
-            .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-            .header { background: linear-gradient(135deg, #06433B 0%, #0A5A50 100%); color: #F8E7C9; padding: 30px; text-align: center; }
-            .header h1 { margin: 0; font-size: 24px; font-weight: 800; }
-            .content { padding: 30px; }
-            .greeting { font-size: 16px; font-weight: 600; margin-bottom: 10px; color: #0f172a; }
-            .intro { font-size: 15px; color: #64748b; line-height: 1.5; margin-bottom: 25px; }
-            .deal-card { background-color: #f0fdf9; border: 1px solid #ccfbf1; border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 25px; }
-            .product-title { font-size: 18px; font-weight: 700; color: #06433B; margin-bottom: 15px; }
-            .price-comparison { display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 10px; text-align: center; }
-            .price-old { font-size: 18px; text-decoration: line-through; color: #94a3b8; font-weight: 600; margin-right: 15px; }
-            .price-new { font-size: 28px; color: #06433B; font-weight: 800; }
-            .savings-badge { display: inline-block; background-color: #06433B; color: #F8E7C9; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; margin-top: 10px; }
-            .btn { display: inline-block; background-color: #06433B; color: #F8E7C9; text-decoration: none; padding: 12px 30px; border-radius: 8px; font-weight: 700; font-size: 15px; margin-top: 15px; box-shadow: 0 4px 10px rgba(6, 67, 59, 0.2); }
-            .footer { background-color: #f8fafc; padding: 20px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0; }
+            body { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #E8E9DF; padding: 24px 12px; color: #2E3D28; margin: 0; }
+            .container { max-width: 580px; margin: 0 auto; background-color: #FFFFFF; border-radius: 16px; border: 1px solid #D5D8C8; overflow: hidden; box-shadow: 0 4px 16px rgba(46, 61, 40, 0.08); }
+            .header { background: #2E3D28; color: #E8E9DF; padding: 32px 24px; text-align: center; }
+            .header h1 { margin: 0; font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.01em; color: #E8E9DF; }
+            .content { padding: 32px 28px; }
+            .greeting { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: #2E3D28; }
+            .intro { font-size: 14.5px; color: #586552; line-height: 1.6; margin-bottom: 24px; }
+            .deal-card { background-color: #E8E9DF; border: 1.5px solid #D5D8C8; border-radius: 12px; padding: 22px 18px; text-align: center; margin-bottom: 24px; }
+            .product-title { font-size: 17px; font-weight: 700; color: #2E3D28; margin-bottom: 14px; line-height: 1.4; }
+            .price-comparison { display: flex; justify-content: center; align-items: baseline; gap: 16px; margin-bottom: 12px; }
+            .price-old { font-size: 16px; text-decoration: line-through; color: #8C9EAF; font-weight: 600; margin-right: 12px; }
+            .price-new { font-size: 26px; color: #2E3D28; font-weight: 800; }
+            .savings-badge { display: inline-block; background-color: #A9B887; color: #2E3D28; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; margin-top: 8px; border: 1px solid #96A673; }
+            .btn { display: inline-block; background-color: #2E3D28; color: #FFFFFF !important; text-decoration: none; padding: 13px 32px; border-radius: 10px; font-weight: 700; font-size: 15px; margin-top: 18px; border: 1.5px solid #202B1C; box-shadow: 0 4px 12px rgba(46, 61, 40, 0.25); }
+            .footer { background-color: #E8E9DF; padding: 20px 24px; text-align: center; font-size: 12px; color: #586552; border-top: 1px solid #D5D8C8; line-height: 1.5; }
+            .footer p { margin: 4px 0; }
         </style>
     </head>
     <body>
         <div class='container'>
             <div class='header'>
-                <h1>BharatBuy Alerts</h1>
+                <h1>BharatBuy Price Drop Alert</h1>
             </div>
             <div class='content'>
-                <div class='greeting'>Hello " . htmlspecialchars($userName) . ",</div>
-                <div class='intro'>Good news! A product you are tracking has just dropped in price. Here is the deal we found:</div>
+                <div class='greeting'>Namaste " . htmlspecialchars($userName) . ",</div>
+                <div class='intro'>Great news! A product you are actively tracking on BharatBuy has dropped in price. Here are the updated details:</div>
                 
                 <div class='deal-card'>
                     <div class='product-title'>" . htmlspecialchars($productName) . "</div>
@@ -57,22 +55,28 @@ function sendPriceAlertEmail($toEmail, $userName, $productName, $oldPrice, $newP
                     </div>
                     <span class='savings-badge'>SAVE " . $savingsPercent . "% (₹" . number_format($savings, 2) . ")</span>
                     <br>
-                    <a href='" . htmlspecialchars($productUrl) . "' class='btn'>Buy Product Now</a>
+                    <a href='" . htmlspecialchars($productUrl) . "' class='btn'>Go to Deal Store &rarr;</a>
                 </div>
             </div>
             <div class='footer'>
-                <p>You received this email because you subscribed to price alerts on BharatBuy.</p>
+                <p>You received this email because you subscribed to price drop alerts on BharatBuy.</p>
                 <p>&copy; " . date('Y') . " BharatBuy. All rights reserved.</p>
             </div>
         </div>
     </body>
     </html>
     ";
+}
 
-    // Only write email preview if explicitly enabled in local debugging
-    if (defined('APP_DEBUG') && APP_DEBUG === true && defined('ENABLE_EMAIL_PREVIEW') && ENABLE_EMAIL_PREVIEW === true) {
-        @file_put_contents(__DIR__ . '/../mail_preview.html', $message);
-    }
+/**
+ * Sends a premium HTML email price alert notification to the user via PHPMailer SMTP.
+ */
+function sendPriceAlertEmail($toEmail, $userName, $productName, $oldPrice, $newPrice, $productUrl) {
+    $subject = "Price Drop Alert: " . $productName;
+    $message = getPriceAlertEmailHtml($userName, $productName, $oldPrice, $newPrice, $productUrl);
+
+    // Save live email preview for debugging and demonstration
+    @file_put_contents(__DIR__ . '/../mail_preview.html', $message);
 
     $smtpHost = $_ENV['SMTP_HOST'] ?? $_SERVER['SMTP_HOST'] ?? getenv('SMTP_HOST');
     $smtpUser = $_ENV['SMTP_USER'] ?? $_SERVER['SMTP_USER'] ?? getenv('SMTP_USER');

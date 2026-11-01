@@ -27,14 +27,14 @@ require_once __DIR__ . '/includes/header.php';
                     Get Started Free <i class="fa-solid fa-arrow-right" style="margin-left: 0.5rem;"></i>
                 </a>
                 <a href="#how-it-works" class="btn-champagne-secondary">
-                    <i class="fa-solid fa-circle-play" style="color: #06433B;"></i> How It Works
+                    <i class="fa-solid fa-circle-play" style="color: var(--color-brand);"></i> How It Works
                 </a>
             <?php else: ?>
                 <a id="hero-btn" href="dashboard.php" class="btn-emerald-primary">
                     Go to Dashboard <i class="fa-solid fa-arrow-right" style="margin-left: 0.5rem;"></i>
                 </a>
                 <a href="#live-demo" class="btn-champagne-secondary">
-                    <i class="fa-solid fa-sliders" style="color: #06433B;"></i> See Price Matrix
+                    <i class="fa-solid fa-sliders" style="color: var(--color-brand);"></i> See Price Matrix
                 </a>
             <?php endif; ?>
         </div>
@@ -150,19 +150,19 @@ require_once __DIR__ . '/includes/header.php';
 <section class="trust-metrics-section" aria-label="Core Capabilities">
     <div class="metrics-card">
         <div class="metric-item">
-            <div class="metric-number"><i class="fa-solid fa-store" style="font-size: 1.5rem; color: #06433B;"></i></div>
+            <div class="metric-number"><i class="fa-solid fa-store" style="font-size: 1.5rem; color: var(--color-navy);"></i></div>
             <div class="metric-label">Multi-Store Product Search</div>
         </div>
         <div class="metric-item">
-            <div class="metric-number"><i class="fa-solid fa-scale-balanced" style="font-size: 1.5rem; color: #06433B;"></i></div>
+            <div class="metric-number"><i class="fa-solid fa-scale-balanced" style="font-size: 1.5rem; color: var(--color-navy);"></i></div>
             <div class="metric-label">Weighted Value Scoring Engine</div>
         </div>
         <div class="metric-item">
-            <div class="metric-number"><i class="fa-solid fa-bell" style="font-size: 1.5rem; color: #06433B;"></i></div>
+            <div class="metric-number"><i class="fa-solid fa-bell" style="font-size: 1.5rem; color: var(--color-navy);"></i></div>
             <div class="metric-label">Automated Price Drop Alerts</div>
         </div>
         <div class="metric-item">
-            <div class="metric-number"><i class="fa-solid fa-coins" style="font-size: 1.5rem; color: #06433B;"></i></div>
+            <div class="metric-number"><i class="fa-solid fa-coins" style="font-size: 1.5rem; color: var(--color-navy);"></i></div>
             <div class="metric-label">Real-Time Currency &amp; Localization</div>
         </div>
     </div>
@@ -338,7 +338,7 @@ require_once __DIR__ . '/includes/header.php';
             <h3>Ask Your Personal AI Shopping Advisor</h3>
             <p>Confused between multiple variants or technical specifications? Chat with our integrated assistant right in the corner for instant advice, pros/cons, and buying guides.</p>
             <button type="button" class="btn-champagne-secondary" onclick="openChatbotWidget()" style="cursor: pointer;">
-                <i class="fa-solid fa-comments" style="color: #06433B;"></i> Ask Shopping Assistant
+                <i class="fa-solid fa-comments" style="color: var(--color-brand);"></i> Ask Shopping Assistant
             </button>
         </div>
 
@@ -347,7 +347,7 @@ require_once __DIR__ . '/includes/header.php';
                 Should I buy iPhone 16 Pro or Samsung S24 Ultra for photography?
             </div>
             <div class="chat-bubble-bot">
-                <i class="fa-solid fa-robot" style="color: #F8E7C9; margin-right: 0.35rem;"></i>
+                <i class="fa-solid fa-robot" style="color: var(--color-orange); margin-right: 0.35rem;"></i>
                 <strong>BharatBuy AI:</strong> The <strong>S24 Ultra</strong> wins on optical zoom (up to 100x Space Zoom and dedicated 5x telephoto). However, the <strong>iPhone 16 Pro</strong> delivers superior 4K120fps video and faster shutter response for candid portraits. Check the live comparison table above for current store discounts!
             </div>
         </div>

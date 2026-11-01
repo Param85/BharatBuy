@@ -6,10 +6,12 @@ class GeminiService {
     
     // Ordered list of models to try for maximum availability and quota resilience
     private array $models = [
+        'gemini-3.8-flash',
+        'gemini-3.5-flash',
         'gemini-3.5-flash-lite',
-        'gemini-flash-lite-latest',
         'gemini-3.1-flash-lite',
-        'gemini-3.5-flash'
+        'gemini-flash-latest',
+        'gemini-pro-latest'
     ];
 
     public function __construct() {
@@ -75,12 +77,19 @@ class GeminiService {
                 return $this->sendPostRequest($model, $payload);
             } catch (Exception $e) {
                 $lastException = $e;
-                // If it's a 429 (quota limit) or 503 (server overloaded), fail over to next model
-                if (strpos($e->getMessage(), '429') !== false || strpos($e->getMessage(), '503') !== false) {
+                // If it's 404 (deprecated/moved), 429 (quota), 503 (busy), or timeout, fail over to next model
+                $errMsg = $e->getMessage();
+                if (
+                    strpos($errMsg, '404') !== false ||
+                    strpos($errMsg, '429') !== false ||
+                    strpos($errMsg, '503') !== false ||
+                    strpos($errMsg, 'timed out') !== false ||
+                    strpos($errMsg, 'cURL Error') !== false
+                ) {
                     continue;
                 }
-                // For other fatal errors, throw immediately
-                throw $e;
+                // For other fatal client errors, continue to next model as well
+                continue;
             }
         }
 
@@ -91,7 +100,7 @@ class GeminiService {
      * Executes the POST request for a specific model using cURL.
      */
     private function sendPostRequest(string $model, array $payload): string {
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent";
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key=" . urlencode($this->apiKey);
         $jsonData = json_encode($payload);
 
         $ch = curl_init($url);
@@ -107,9 +116,11 @@ class GeminiService {
             'x-goog-api-key: ' . $this->apiKey
         ]);
         
-        // Enforce strict timeouts (10s max total, 5s connection timeout)
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        // Network resilience options
+        curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         
         // Execute request
         $response = curl_exec($ch);

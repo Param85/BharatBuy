@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/includes/db.php';
-require_once __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/includes/session.php';
 redirectIfLoggedOut();
+require_once __DIR__ . '/includes/db.php';
 
 // Correct any saved items with the incorrect Unsplash beard photo ID
 $pdo->exec("UPDATE wishlist SET image_url = 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=500&q=80' WHERE image_url LIKE '%photo-1521572267360-ee0c2909d518%'");
@@ -34,6 +34,9 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$_SESSION['user_id']]);
 $items = $stmt->fetchAll();
+
+$pageTitle = 'My Saved Wishlist — BharatBuy';
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <link rel="stylesheet" href="css/dashboard.css?v=<?= time(); ?>">

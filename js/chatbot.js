@@ -222,11 +222,11 @@ document.addEventListener('DOMContentLoaded', function() {
             box-shadow: 0 1px 2px rgba(0,0,0,0.03);
         }
         .chat-tts-btn:hover {
-            color: #F8E7C9;
-            border-color: #06433B;
-            background: #06433B;
+            color: #FFFFFF;
+            border-color: var(--color-navy);
+            background: var(--color-navy);
             transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(6, 67, 59, 0.25);
+            box-shadow: 0 2px 8px rgba(74, 51, 40, 0.25);
         }
         .chat-tts-btn.speaking {
             color: #ffffff !important;
@@ -240,9 +240,9 @@ document.addEventListener('DOMContentLoaded', function() {
             50% { transform: scale(1.05); }
         }
         .chat-audio-btn {
-            background: rgba(248, 231, 201, 0.35);
+            background: rgba(200, 155, 109, 0.35);
             border: 1px solid rgba(226, 199, 155, 0.8);
-            color: #06433B;
+            color: var(--color-navy);
             width: 42px;
             height: 42px;
             border-radius: 10px;
@@ -256,9 +256,9 @@ document.addEventListener('DOMContentLoaded', function() {
             font-size: 1rem;
         }
         .chat-audio-btn:hover {
-            color: #F8E7C9;
-            background: #06433B;
-            border-color: #06433B;
+            color: #FFFFFF;
+            background: var(--color-navy);
+            border-color: var(--color-navy);
             transform: scale(1.05);
         }
         .chat-audio-btn.listening {
@@ -274,27 +274,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     </style>
 
-    <!-- Floating Chat Button (Emerald Ink & Champagne Luxury Glow) -->
-    <div id="chat-btn" style="position: fixed; bottom: 25px; right: 25px; background: linear-gradient(135deg, #06433B 0%, #0A5C52 100%); color: #F8E7C9; width: 62px; height: 62px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 25px -4px rgba(6, 67, 59, 0.45); border: 2px solid rgba(248, 231, 201, 0.6); z-index: 1000; transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);">
-        <i class="fas fa-robot fa-lg" style="color: #F8E7C9;"></i>
+    <!-- Floating Chat Button (Deep Olive & Sage Green Luxury Glow) -->
+    <div id="chat-btn" style="position: fixed; bottom: 25px; right: 25px; background: var(--bb-brand-dark, #2E3D28); color: #FFFFFF; width: 62px; height: 62px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 25px -4px rgba(46, 61, 40, 0.45); border: 2px solid var(--bb-highlight, #A9B887); z-index: 1000; transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);">
+        <i class="fas fa-robot fa-lg" style="color: #FFFFFF;"></i>
     </div>
 
     <!-- Chat Window Container -->
-    <div id="chat-window" style="display: none; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: fixed; bottom: 98px; right: 25px; width: 350px; height: 470px; background: var(--card-bg); border: 1.5px solid var(--champagne-border, #E8D3B0); border-radius: 18px; box-shadow: 0 15px 35px rgba(6, 67, 59, 0.15); z-index: 1000; flex-direction: column; overflow: hidden; font-family: inherit; color: var(--text);">
+    <div id="chat-window" style="display: none; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: fixed; bottom: 98px; right: 25px; width: 350px; height: 470px; background: var(--card-bg); border: 1.5px solid var(--champagne-border, #C5D1DE); border-radius: 18px; box-shadow: 0 15px 35px rgba(46, 61, 40, 0.15); z-index: 1000; flex-direction: column; overflow: hidden; font-family: inherit; color: var(--text);">
         <!-- Header -->
-        <div style="background: linear-gradient(135deg, #042823 0%, #06433B 60%, #08564B 100%); color: #F8E7C9; padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1.5px solid rgba(248, 231, 201, 0.25);">
+        <div style="background: var(--bb-brand-dark, #2E3D28); color: #FFFFFF; padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1.5px solid rgba(169, 184, 135, 0.35);">
             <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <div style="background: rgba(248, 231, 201, 0.15); border: 1px solid rgba(248, 231, 201, 0.3); width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #F8E7C9;">
+                <div style="background: rgba(169, 184, 135, 0.18); border: 1px solid rgba(169, 184, 135, 0.35); width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #FFFFFF;">
                     <i class="fas fa-robot"></i>
                 </div>
                 <div>
-                    <h4 style="margin: 0; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 0.95rem; color: #F8E7C9;">BharatBuy Assistant</h4>
-                    <span style="font-size: 0.7rem; color: #E8D3B0; display: flex; align-items: center; gap: 0.25rem;">
+                    <h4 style="margin: 0; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 0.95rem; color: #FFFFFF;">BharatBuy Assistant</h4>
+                    <span style="font-size: 0.7rem; color: #C5D1DE; display: flex; align-items: center; gap: 0.25rem;">
                         <span style="width: 6px; height: 6px; background: #10b981; border-radius: 50%; display: inline-block;"></span> Online
                     </span>
                 </div>
             </div>
-            <i class="fas fa-times close-chat" style="cursor: pointer; color: #F8E7C9; opacity: 0.85; transition: opacity 0.2s;" id="close-chat-btn"></i>
+            <i class="fas fa-times close-chat" style="cursor: pointer; color: #FFFFFF; opacity: 0.85; transition: opacity 0.2s;" id="close-chat-btn"></i>
         </div>
 
         <!-- Chat Log Area -->
@@ -316,8 +316,8 @@ document.addEventListener('DOMContentLoaded', function() {
             <button id="audio-chat-btn" class="chat-audio-btn" title="Audio Voice Input">
                 <i class="fas fa-microphone"></i>
             </button>
-            <button id="send-chat" class="btn" title="Send message" style="width: 42px; height: 42px; padding: 0; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: linear-gradient(135deg, #06433B 0%, #08564B 100%); color: #F8E7C9; border: 1px solid rgba(248, 231, 201, 0.4); cursor: pointer;">
-                <i class="fas fa-paper-plane" style="color: #F8E7C9;"></i>
+            <button id="send-chat" class="btn" title="Send message" style="width: 42px; height: 42px; padding: 0; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--color-orange); color: #FFFFFF; border: 1px solid rgba(200, 155, 109, 0.4); cursor: pointer;">
+                <i class="fas fa-paper-plane" style="color: #FFFFFF;"></i>
             </button>
         </div>
     </div>`;
@@ -562,8 +562,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Focus input styles
     chatInput.addEventListener('focus', () => {
-        chatInput.style.borderColor = '#06433B';
-        chatInput.style.boxShadow = '0 0 0 3px rgba(248, 231, 201, 0.6)';
+        chatInput.style.borderColor = 'var(--color-navy)';
+        chatInput.style.boxShadow = '0 0 0 3px rgba(200, 155, 109, 0.6)';
     });
     chatInput.addEventListener('blur', () => {
         chatInput.style.borderColor = 'var(--border)';
@@ -574,9 +574,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const text = chatInput.value.trim();
         if (!text) return;
 
-        // Append User Message with speech bubble styling (Emerald Ink & Champagne)
+        // Append User Message with speech bubble styling (Deep Olive & Sage Green)
         chatLogs.innerHTML += `
-            <div class="user-msg-wrapper" style="align-self: flex-end; max-width: 80%; background: linear-gradient(135deg, #06433B 0%, #08564B 100%); color: #F8E7C9; padding: 0.75rem 1rem; border-radius: 12px 12px 4px 12px; font-size: 0.88rem; line-height: 1.4; border: 1px solid rgba(248, 231, 201, 0.35); box-shadow: 0 4px 12px rgba(6, 67, 59, 0.15);">
+            <div class="user-msg-wrapper" style="align-self: flex-end; max-width: 80%; background: var(--bb-cta, #2E3D28); color: #E8E9DF; padding: 0.75rem 1rem; border-radius: 12px 12px 4px 12px; font-size: 0.88rem; line-height: 1.4; border: 1px solid rgba(169, 184, 135, 0.35); box-shadow: 0 4px 12px rgba(46, 61, 40, 0.15);">
                 ${escapeHTML(text)}
             </div>
         `;

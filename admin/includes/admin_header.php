@@ -27,7 +27,7 @@ $adminEmail = $_SESSION['user_email'] ?? '';
     <!-- Sidebar -->
     <aside class="admin-sidebar" id="adminSidebar">
         <div class="sidebar-brand">
-            <img src="../assets/images/logo.png?v=3" alt="BharatBuy" class="sidebar-logo">
+            <img src="../assets/images/favicon.svg?v=3" alt="BharatBuy" class="sidebar-logo">
             <span class="sidebar-brand-text">Admin</span>
         </div>
 

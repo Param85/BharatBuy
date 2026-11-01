@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="admin-login-wrapper">
         <div class="admin-login-card">
             <div class="login-logo">
-                <img src="../assets/images/logo.png?v=3" alt="BharatBuy">
+                <img src="../assets/images/favicon.svg?v=3" alt="BharatBuy">
                 <span>Admin Panel</span>
             </div>
 

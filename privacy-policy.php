@@ -1,4 +1,5 @@
 <?php
+$pageTitle = 'Privacy Policy — BharatBuy';
 require_once __DIR__ . '/includes/header.php';
 ?>
 

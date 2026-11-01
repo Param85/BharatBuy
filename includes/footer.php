@@ -52,6 +52,9 @@
                 <p>&copy; <?php echo date('Y'); ?> BharatBuy. All rights reserved.</p>
                 <p class="footer-disclaimer">Product names, trademarks, and merchant logos are the property of their respective owners.</p>
             </div>
+        </div>
+    </footer>
+
     <!-- 4. Back to Top Button -->
     <button id="back-to-top-btn" aria-label="Back to top" title="Back to top">
         <i class="fa-solid fa-arrow-up"></i>

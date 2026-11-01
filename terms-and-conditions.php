@@ -1,4 +1,5 @@
 <?php
+$pageTitle = 'Terms & Conditions — BharatBuy';
 require_once __DIR__ . '/includes/header.php';
 ?>
 

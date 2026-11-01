@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/session.php';
 require_once __DIR__ . '/includes/db.php';
-require_once __DIR__ . '/includes/header.php';
 
 // Category Definitions & Curated Data
 $CATEGORIES_DATA = [
@@ -862,6 +861,9 @@ $displayProducts = $dbProducts;
 if (empty($displayProducts) && empty($searchQuery) && ($subcatFilter === 'All' || empty($subcatFilter))) {
     $displayProducts = $catInfo['fallback_products'];
 }
+
+$pageTitle = $catInfo['title'] . " Deals & Price Comparison — BharatBuy";
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <link rel="stylesheet" href="css/category.css?v=<?= time(); ?>">
@@ -951,7 +953,7 @@ if (empty($displayProducts) && empty($searchQuery) && ($subcatFilter === 'All' |
             </div>
 
             <a href="dashboard.php?q=<?= urlencode($catInfo['name']); ?>" class="btn-champagne-secondary" style="padding: 0.45rem 0.95rem; font-size: 0.85rem;" title="Compare live on Dashboard">
-                <i class="fa-solid fa-sliders" style="color: #06433B;"></i> Live Scanner
+                <i class="fa-solid fa-sliders" style="color: var(--color-navy);"></i> Live Scanner
             </a>
         </form>
     </div>
@@ -1059,7 +1061,7 @@ if (empty($displayProducts) && empty($searchQuery) && ($subcatFilter === 'All' |
                 if ($k === $catKey) continue;
             ?>
                 <a href="category.php?cat=<?= urlencode($k); ?>">
-                    <i class="<?= htmlspecialchars($c['icon']); ?>" style="color: #06433B;"></i>
+                    <i class="<?= htmlspecialchars($c['icon']); ?>" style="color: var(--color-navy);"></i>
                     <?= htmlspecialchars($c['name']); ?>
                 </a>
             <?php endforeach; ?>

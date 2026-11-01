@@ -54,7 +54,7 @@ if (isLoggedIn()) {
     <title><?php echo !empty($pageTitle) ? htmlspecialchars($pageTitle) : APP_NAME; ?></title>
     <meta name="description" content="BharatBuy is a smart multi-store shopping platform. Compare product prices, review price history, and set automated price drop alerts across major retailers.">
     <meta name="keywords" content="price comparison, online shopping, price tracker, deals, BharatBuy, India shopping, discount finder">
-    <meta name="theme-color" content="#06433B">
+    <meta name="theme-color" content="#FFFFFF">
 
     <!-- Favicon Configuration -->
     <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg?v=3">
@@ -103,17 +103,18 @@ if (isLoggedIn()) {
         position: absolute;
         top: -5px;
         right: -5px;
-        background: var(--error);
-        color: white;
+        background: var(--bb-error, #DC3545);
+        color: #FFFFFF;
         border-radius: 50%;
         font-size: 0.65rem;
         font-weight: 800;
-        width: 16px;
-        height: 16px;
+        width: 17px;
+        height: 17px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 2px solid var(--card-bg);
+        border: 2px solid #FFFFFF;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
     }
     .notif-dropdown {
         position: absolute;
@@ -129,7 +130,7 @@ if (isLoggedIn()) {
         margin-top: 12px;
         display: flex;
         flex-direction: column;
-        overflow: visible;
+        overflow: hidden;
         animation: slideDown 0.2s ease-out;
     }
     .notif-dropdown::before {
@@ -139,33 +140,33 @@ if (isLoggedIn()) {
         left: 50%;
         transform: translateX(-50%);
         border: 8px solid transparent;
-        border-bottom-color: var(--primary-light);
+        border-bottom-color: var(--color-navy);
     }
     .notif-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 0.85rem 1rem;
-        border-bottom: 1px solid var(--border);
-        background: var(--primary-light);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        background: var(--color-navy);
     }
     .notif-header h3 {
         margin: 0;
         font-size: 0.95rem;
         font-weight: 700;
-        color: var(--primary);
+        color: #F8F9FA;
     }
     .notif-clear-btn {
         background: none;
         border: none;
-        color: var(--text-muted);
+        color: #C5D1DE;
         font-size: 0.75rem;
         font-weight: 600;
         cursor: pointer;
         transition: color 0.15s;
     }
     .notif-clear-btn:hover {
-        color: var(--error);
+        color: var(--color-orange);
     }
     .notif-body {
         max-height: 280px;
@@ -187,12 +188,18 @@ if (isLoggedIn()) {
         border-bottom: none;
     }
     .notif-item:hover {
-        background: var(--primary-light);
+        background: var(--color-navy-light);
+    }
+    [data-theme="dark"] .notif-item:hover {
+        background: rgba(255, 255, 255, 0.06);
     }
     .notif-item-title {
         font-size: 0.85rem;
         font-weight: 700;
-        color: var(--primary);
+        color: var(--color-navy);
+    }
+    [data-theme="dark"] .notif-item-title {
+        color: var(--color-orange);
     }
     .notif-item-message {
         font-size: 0.8rem;
@@ -220,7 +227,7 @@ if (isLoggedIn()) {
     }
     .bell-wiggle {
         animation: bellShake 0.6s ease-in-out;
-        color: var(--primary) !important;
+        color: var(--color-orange) !important;
         display: inline-block;
     }
     </style>
@@ -235,17 +242,15 @@ if (isLoggedIn()) {
 
     <header class="site-header">
         <div class="header-container">
-            <a href="index.php" class="nav-logo"><img src="assets/images/logo.png?v=3" alt="BharatBuy"></a>
+            <a href="index.php" class="nav-logo">
+                <img src="assets/images/logo-dark.png?v=<?= time(); ?>" alt="BharatBuy" class="logo-light-theme">
+                <img src="assets/images/logo.png?v=<?= time(); ?>" alt="BharatBuy" class="logo-dark-theme">
+            </a>
 
             <div style="display: flex; align-items: center; gap: 0.75rem;">
                 <nav>
                     <ul class="nav-links">
                         <li><a href="index.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active' : ''; ?>">Home</a></li>
-                        
-                        <!-- 3. Site Search Quick Nav -->
-                        <li><a href="dashboard.php" class="nav-icon-btn" title="Site Search (Ctrl+K)" aria-label="Site Search"><i class="fa-solid fa-magnifying-glass"></i></a></li>
-
-
                         <?php if(isLoggedIn()): ?>
                             <li><a href="wishlist.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'wishlist.php' ? 'active' : ''; ?>">Wishlist</a></li>
                             <li style="position: relative;">
@@ -328,7 +333,7 @@ if (isLoggedIn()) {
 
                         <?php if(isLoggedIn()): ?>
                             <?php if(!empty($_SESSION['is_admin'])): ?>
-                                <li><a href="admin/" class="btn btn-sm btn-secondary"><i class="fa-solid fa-shield-halved"></i> Admin Panel</a></li>
+                                <li><a href="admin/" class="btn btn-sm btn-secondary"><i class="fa-solid fa-shield-halved"></i> Admin</a></li>
                             <?php endif; ?>
                             <li><a href="logout.php" class="nav-logout-btn" title="Log out of your account"><i class="fa-solid fa-arrow-right-from-bracket" style="font-size: 0.82rem;"></i> Logout</a></li>
                         <?php else: ?>
@@ -350,7 +355,10 @@ if (isLoggedIn()) {
     <div id="mobile-nav-overlay" class="mobile-nav-overlay" aria-hidden="true"></div>
     <aside id="mobile-nav-drawer" class="mobile-nav-drawer" aria-label="Mobile Navigation">
         <div class="mobile-drawer-header">
-            <a href="index.php" class="nav-logo"><img src="assets/images/logo.png?v=3" alt="BharatBuy" style="height: 32px;"></a>
+            <a href="index.php" class="nav-logo">
+                <img src="assets/images/logo-dark.png?v=<?= time(); ?>" alt="BharatBuy" class="logo-light-theme" style="height: 32px;">
+                <img src="assets/images/logo.png?v=<?= time(); ?>" alt="BharatBuy" class="logo-dark-theme" style="height: 32px;">
+            </a>
             <button id="mobile-drawer-close" class="mobile-menu-btn" style="display: inline-flex;" aria-label="Close Navigation Menu">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -364,7 +372,7 @@ if (isLoggedIn()) {
             <?php if(isLoggedIn()): ?>
                 <li><a href="wishlist.php"><i class="fa-solid fa-heart"></i> Saved Wishlist</a></li>
                 <?php if(!empty($_SESSION['is_admin'])): ?>
-                    <li><a href="admin/"><i class="fa-solid fa-shield-halved"></i> Admin Panel</a></li>
+                    <li><a href="admin/"><i class="fa-solid fa-shield-halved"></i> Admin</a></li>
                 <?php endif; ?>
                 <li><a href="logout.php"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a></li>
             <?php else: ?>

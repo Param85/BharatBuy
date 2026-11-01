@@ -59,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+$pageTitle = 'Sign In — BharatBuy';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
@@ -78,8 +79,8 @@ require_once __DIR__ . '/includes/header.php';
     <div id="account-chooser-view" style="display: none;">
         <!-- Header decoration with BharatBuy logo -->
         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1.5rem; position: relative;">
-            <div style="background: radial-gradient(circle, #FAF2E3 50%, #F4EAD4 100%); padding: 1.25rem; border-radius: 50%; box-shadow: 0 4px 12px rgba(6, 67, 59, 0.08); display: flex; align-items: center; justify-content: center; width: 90px; height: 90px; border: 1.5px solid var(--champagne-border, #E8CD9E);">
-                <img src="assets/images/logo.png?v=3" alt="BharatBuy" style="max-width: 65px; max-height: 65px; object-fit: contain;">
+            <div style="background: #FFFFFF; padding: 1.25rem; border-radius: 50%; box-shadow: 0 4px 12px rgba(46, 61, 40, 0.08); display: flex; align-items: center; justify-content: center; width: 90px; height: 90px; border: 1.5px solid var(--bb-border, #D5D8C8);">
+                <img src="assets/images/logo-dark.png?v=3" alt="BharatBuy" style="max-width: 65px; max-height: 65px; object-fit: contain;">
             </div>
         </div>
 
@@ -167,7 +168,7 @@ require_once __DIR__ . '/includes/header.php';
     border-bottom: none;
 }
 .account-item-card:hover {
-    background: rgba(248, 231, 201, 0.28);
+    background: rgba(200, 155, 109, 0.1);
 }
 .account-info-container {
     display: flex;
@@ -179,8 +180,8 @@ require_once __DIR__ . '/includes/header.php';
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #06433B 0%, #0A5A50 100%);
-    color: #F8E7C9;
+    background: var(--color-navy);
+    color: #FFFFFF;
     border: 1px solid var(--champagne-border, #E8CD9E);
     display: flex;
     align-items: center;
@@ -226,7 +227,7 @@ require_once __DIR__ . '/includes/header.php';
 .auth-secondary-btn {
     border: 1.5px solid var(--champagne-border, #E8CD9E);
     background: var(--card-bg);
-    color: #06433B;
+    color: var(--color-navy);
     border-radius: 8px;
     padding: 8px 16px;
     font-size: 0.9rem;
@@ -235,24 +236,24 @@ require_once __DIR__ . '/includes/header.php';
     transition: all 0.2s ease;
 }
 .auth-secondary-btn:hover {
-    background: #06433B;
-    color: #F8E7C9;
-    border-color: #06433B;
+    background: var(--color-navy);
+    color: #FFFFFF;
+    border-color: var(--color-navy);
 }
 [data-theme="dark"] .auth-secondary-btn {
-    color: #F8E7C9;
+    color: #FFFFFF;
 }
 [data-theme="dark"] .auth-secondary-btn:hover {
-    background: #F8E7C9;
-    color: #06433B;
+    background: #FFFFFF;
+    color: var(--color-navy);
 }
 
 .big-avatar {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #06433B 0%, #0A5A50 100%);
-    color: #F8E7C9;
+    background: var(--color-navy);
+    color: #FFFFFF;
     display: flex;
     align-items: center;
     justify-content: center;
